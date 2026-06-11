@@ -1,29 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AIDiscoveryApp } from "@/components/AIDiscoveryApp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "AI Discovery Channel — eSTUDY South Africa" },
+      { name: "description", content: "Curated directory of 50+ enterprise AI tools across 6 core business functions. Powered by eSTUDY South Africa." },
+      { property: "og:title", content: "AI Discovery Channel — eSTUDY South Africa" },
+      { property: "og:description", content: "Discover, compare and build your AI automation stack with 50+ curated enterprise tools." },
     ],
   }),
-  component: Index,
+  component: AIDiscoveryApp,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
