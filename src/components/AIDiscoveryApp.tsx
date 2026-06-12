@@ -1098,7 +1098,7 @@ function ContactPage() {
         `Department: ${form.dept}\n` +
         `Email: ${form.email}\n\n` +
         `Message:\n${form.message}\n\n` +
-        `— Dispatched to: ${CONTACT_EMAILS.join(", ")}`,
+        `— Dispatched to: The AI Think Tank (${CONTACT_EMAILS.join(", ")})`,
     );
     const mailto = `mailto:${CONTACT_EMAILS.join(",")}?subject=${subject}&body=${body}`;
     window.location.href = mailto;
@@ -1115,15 +1115,16 @@ function ContactPage() {
         </h1>
         <p className="mt-3 text-fg-soft max-w-xl mx-auto">
           Report a platform issue or request a new tool addition. Messages route directly to{" "}
-          <span className="text-accent font-semibold">{CONTACT_EMAILS.join(" & ")}</span>.
+          <span className="text-accent font-semibold">The AI Think Tank</span>.
         </p>
       </div>
 
       <form onSubmit={submit} className="glass-strong rounded-3xl p-7 space-y-4">
         {sent && (
           <div className="rounded-xl bg-accent/15 border border-accent/40 p-3 text-sm text-fg-strong flex items-center gap-2">
-            <Check className="h-4 w-4 text-accent" /> Message dispatched to the eSTUDY ops team —
-            we'll reply shortly.
+            <Check className="h-4 w-4 text-accent" /> Message dispatched to{" "}
+            <span className="text-accent font-semibold">The AI Think Tank</span> — we'll reply
+            shortly.
           </div>
         )}
         <div className="grid sm:grid-cols-2 gap-4">
@@ -1175,8 +1176,8 @@ function ContactPage() {
           <Send className="h-4 w-4" /> Send message
         </button>
         <p className="text-[11px] text-fg-mute text-center">
-          Your message is routed to <span className="font-semibold">{CONTACT_EMAILS[0]}</span> and{" "}
-          <span className="font-semibold">{CONTACT_EMAILS[1]}</span>.
+          Your message is routed to{" "}
+          <span className="text-accent font-semibold">The AI Think Tank</span>.
         </p>
       </form>
     </main>
