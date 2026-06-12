@@ -1,14 +1,63 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+/* eslint-disable prettier/prettier */
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Search, Sparkles, Filter, X, Plus, Check, Download, ExternalLink,
-  GraduationCap, Briefcase, Megaphone, Handshake, Languages, Calculator,
-  Presentation, Box, ShieldCheck, Menu, Zap, Layers,
-  Sun, Moon, Home as HomeIcon, Info, GitCompare, Mail, Building2, TrendingUp,
-  MessageCircle, Send, Bot, Trash2, Star, Newspaper, ThumbsUp, MessageSquare, Share2, Rocket,
+  Search,
+  Sparkles,
+  Filter,
+  X,
+  Plus,
+  Check,
+  Download,
+  ExternalLink,
+  GraduationCap,
+  Briefcase,
+  Megaphone,
+  Handshake,
+  Languages,
+  Calculator,
+  Presentation,
+  Box,
+  ShieldCheck,
+  Menu,
+  Zap,
+  Layers,
+  Sun,
+  Moon,
+  Home as HomeIcon,
+  Info,
+  GitCompare,
+  Mail,
+  Building2,
+  TrendingUp,
+  MessageCircle,
+  Send,
+  Bot,
+  Trash2,
+  Star,
+  Newspaper,
+  ThumbsUp,
+  MessageSquare,
+  Share2,
+  Rocket,
+  Cpu,
+  Code2,
+  Palette,
+  Video,
+  GitBranch,
 } from "lucide-react";
 import {
-  CATEGORIES, TAGS, TOOLS, DEPARTMENTS, ENTERPRISE_HIGHLIGHTS, TRENDING, FEED_POSTS, logoUrl,
-  type Tool, type Category, type Tag, type Department,
+  CATEGORIES,
+  TAGS,
+  TOOLS,
+  DEPARTMENTS,
+  ENTERPRISE_HIGHLIGHTS,
+  TRENDING,
+  FEED_POSTS,
+  logoUrl,
+  type Tool,
+  type Category,
+  type Tag,
+  type Department,
 } from "@/lib/tools-data";
 
 type Page = "home" | "about" | "compare" | "trends" | "contact";
@@ -23,10 +72,22 @@ const CAT_ICONS: Record<Category, React.ComponentType<{ className?: string }>> =
   "Presentation & Document Generation": Presentation,
   "3D Modeling & Game Development": Box,
   "Security, Privacy & Compliance Tools": ShieldCheck,
+  "Large Language Models & Text Generation": Cpu,
+  "Software Development & Coding Agents": Code2,
+  "Search, Research & Information Retrieval": Search,
+  "Visual Art, Design & Image Generation": Palette,
+  "Video, Audio & Avatar Production": Video,
+  "Productivity, Automation & Workflow Orchestration": GitBranch,
 };
 
 function initials(name: string) {
-  return name.replace(/[^A-Za-z0-9 ]/g, "").split(" ").slice(0, 2).map(s => s[0]).join("").toUpperCase();
+  return name
+    .replace(/[^A-Za-z0-9 ]/g, "")
+    .split(" ")
+    .slice(0, 2)
+    .map((s) => s[0])
+    .join("")
+    .toUpperCase();
 }
 
 /* ---------- Theme ---------- */
@@ -41,7 +102,7 @@ function useTheme() {
     else root.classList.remove("light");
     localStorage.setItem("aidc-theme", theme);
   }, [theme]);
-  return { theme, toggle: () => setTheme(t => (t === "dark" ? "light" : "dark")) };
+  return { theme, toggle: () => setTheme((t) => (t === "dark" ? "light" : "dark")) };
 }
 
 /* ---------- Brand Logo ---------- */
@@ -85,7 +146,17 @@ function TagPill({ tag, active, onClick }: { tag: Tag; active?: boolean; onClick
   );
 }
 
-function CategoryPill({ cat, active, count, onClick }: { cat: Category; active: boolean; count: number; onClick: () => void }) {
+function CategoryPill({
+  cat,
+  active,
+  count,
+  onClick,
+}: {
+  cat: Category;
+  active: boolean;
+  count: number;
+  onClick: () => void;
+}) {
   const Icon = CAT_ICONS[cat];
   return (
     <button
@@ -96,19 +167,38 @@ function CategoryPill({ cat, active, count, onClick }: { cat: Category; active: 
           : "border border-transparent hover:bg-[var(--surface-1)] text-fg-soft"
       }`}
     >
-      <span className={`grid place-items-center h-8 w-8 rounded-lg ${active ? "bg-accent text-accent-foreground" : "bg-[var(--surface-1)] text-fg-soft group-hover:bg-[var(--surface-strong-1)]"}`}>
+      <span
+        className={`grid place-items-center h-8 w-8 rounded-lg ${active ? "bg-accent text-accent-foreground" : "bg-[var(--surface-1)] text-fg-soft group-hover:bg-[var(--surface-strong-1)]"}`}
+      >
         <Icon className="h-4 w-4" />
       </span>
       <span className="flex-1 text-sm font-medium leading-tight">{cat}</span>
-      <span className={`text-[11px] px-2 py-0.5 rounded-full ${active ? "bg-accent text-accent-foreground" : "bg-[var(--surface-strong-1)] text-fg-mute"}`}>{count}</span>
+      <span
+        className={`text-[11px] px-2 py-0.5 rounded-full ${active ? "bg-accent text-accent-foreground" : "bg-[var(--surface-strong-1)] text-fg-mute"}`}
+      >
+        {count}
+      </span>
     </button>
   );
 }
 
 /* ---------- Tool Card ---------- */
-function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompare, showCompare }: {
-  tool: Tool; inStack: boolean; onAdd: () => void; onOpen: () => void;
-  compareSelected?: boolean; onToggleCompare?: () => void; showCompare?: boolean;
+function ToolCard({
+  tool,
+  inStack,
+  onAdd,
+  onOpen,
+  compareSelected,
+  onToggleCompare,
+  showCompare,
+}: {
+  tool: Tool;
+  inStack: boolean;
+  onAdd: () => void;
+  onOpen: () => void;
+  compareSelected?: boolean;
+  onToggleCompare?: () => void;
+  showCompare?: boolean;
 }) {
   const highlight = ENTERPRISE_HIGHLIGHTS.has(tool.name);
   const primary = tool.categories[0];
@@ -131,7 +221,9 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
                   aria-label="Compare"
                   title="Add to compare"
                   className={`shrink-0 grid place-items-center h-7 w-7 rounded-lg transition-all ${
-                    compareSelected ? "bg-primary text-primary-foreground" : "bg-[var(--surface-1)] text-fg-soft hover:bg-primary hover:text-primary-foreground"
+                    compareSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-[var(--surface-1)] text-fg-soft hover:bg-primary hover:text-primary-foreground"
                   }`}
                 >
                   <GitCompare className="h-3.5 w-3.5" />
@@ -142,7 +234,9 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
                 aria-label={inStack ? "Remove from stack" : "Add to stack"}
                 title={inStack ? "In your stack" : "Add to My Stack"}
                 className={`shrink-0 grid place-items-center h-7 w-7 rounded-lg transition-all ${
-                  inStack ? "bg-accent text-accent-foreground" : "bg-[var(--surface-1)] text-fg-soft hover:bg-accent hover:text-accent-foreground"
+                  inStack
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-[var(--surface-1)] text-fg-soft hover:bg-accent hover:text-accent-foreground"
                 }`}
               >
                 {inStack ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -157,16 +251,26 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
         <span className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-md bg-accent/15 text-accent border border-accent/30">
           {primary}
         </span>
-        {tool.categories.slice(1, 2).map(c => (
-          <span key={c} className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-md bg-[var(--surface-1)] text-fg-soft border border-[var(--surface-border)]">{c}</span>
+        {tool.categories.slice(1, 2).map((c) => (
+          <span
+            key={c}
+            className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-md bg-[var(--surface-1)] text-fg-soft border border-[var(--surface-border)]"
+          >
+            {c}
+          </span>
         ))}
       </div>
 
       <p className="mt-3 text-sm text-fg-soft leading-relaxed line-clamp-3">{tool.summary}</p>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
-        {tool.tags.map(t => (
-          <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-mute">{t}</span>
+        {tool.tags.map((t) => (
+          <span
+            key={t}
+            className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-mute"
+          >
+            {t}
+          </span>
         ))}
       </div>
 
@@ -181,20 +285,46 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
 }
 
 /* ---------- Modal ---------- */
-function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: () => void; inStack: boolean; onToggle: () => void }) {
+function ToolModal({
+  tool,
+  onClose,
+  inStack,
+  onToggle,
+}: {
+  tool: Tool;
+  onClose: () => void;
+  inStack: boolean;
+  onToggle: () => void;
+}) {
   const primary = tool.categories[0];
   const Icon = CAT_ICONS[primary];
   const highlight = ENTERPRISE_HIGHLIGHTS.has(tool.name);
+  
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, []);
+  
   return (
-    <div className="fixed inset-0 z-[60] grid place-items-center p-4 animate-fade-in-up" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
-      <div onClick={e => e.stopPropagation()} className="relative glass-strong rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-7 ring-1 ring-accent/20 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)]">
-        <button onClick={onClose} aria-label="Close" className="absolute top-4 right-4 grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong">
+    <div
+      className="fixed inset-0 z-[60] grid place-items-center p-4"
+      onClick={onClose}
+    >
+      {/* Darker, more opaque backdrop - no background visible */}
+      <div className="fixed inset-0 bg-black/95 backdrop-blur-md" />
+      
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative glass-strong rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-7 ring-1 ring-accent/20 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)] z-[61]"
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-4 right-4 grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong"
+        >
           <X className="h-4 w-4" />
         </button>
 
@@ -207,8 +337,13 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-accent/15 text-accent border border-accent/30">
                 <Icon className="h-3.5 w-3.5" /> {primary}
               </span>
-              {tool.categories.slice(1).map(c => (
-                <span key={c} className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft">{c}</span>
+              {tool.categories.slice(1).map((c) => (
+                <span
+                  key={c}
+                  className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft"
+                >
+                  {c}
+                </span>
               ))}
             </div>
           </div>
@@ -216,11 +351,15 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
 
         <div className="mt-6 space-y-5">
           <section className="rounded-2xl p-5 bg-[var(--surface-1)]/60 border border-[var(--surface-border)]">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Summary</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+              Summary
+            </h3>
             <p className="text-fg-strong leading-relaxed">{tool.summary}</p>
           </section>
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Primary operational benefits</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+              Primary operational benefits
+            </h3>
             <p className="text-fg-soft leading-relaxed">{tool.benefits}</p>
           </section>
           <section className="rounded-2xl p-5 bg-gradient-to-br from-primary/15 to-transparent border border-primary/30">
@@ -230,19 +369,33 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
             <p className="text-fg-soft leading-relaxed">{tool.bestFor}</p>
           </section>
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Capability tags</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+              Capability tags
+            </h3>
             <div className="flex flex-wrap gap-2">
-              {tool.tags.map(t => (
-                <span key={t} className="text-[11px] px-2 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft">{t}</span>
+              {tool.tags.map((t) => (
+                <span
+                  key={t}
+                  className="text-[11px] px-2 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft"
+                >
+                  {t}
+                </span>
               ))}
             </div>
           </section>
           {tool.departments.length > 0 && (
             <section>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Recommended for</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                Recommended for
+              </h3>
               <div className="flex flex-wrap gap-2">
-                {tool.departments.map(d => (
-                  <span key={d} className="text-[11px] px-2 py-1 rounded-full bg-primary/20 border border-primary/40 text-fg-strong">{d}</span>
+                {tool.departments.map((d) => (
+                  <span
+                    key={d}
+                    className="text-[11px] px-2 py-1 rounded-full bg-primary/20 border border-primary/40 text-fg-strong"
+                  >
+                    {d}
+                  </span>
                 ))}
               </div>
             </section>
@@ -253,8 +406,9 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
                 <Zap className="h-4 w-4 text-accent" /> Why it's an enterprise pick
               </h3>
               <p className="text-sm text-fg-soft leading-relaxed">
-                {tool.name} sits at the intersection of orchestration, intelligence and reliability — built to plug into existing
-                corporate ecosystems, scale across teams and remove manual friction in high-volume workflows.
+                {tool.name} sits at the intersection of orchestration, intelligence and reliability
+                — built to plug into existing corporate ecosystems, scale across teams and remove
+                manual friction in high-volume workflows.
               </p>
             </section>
           )}
@@ -272,7 +426,9 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
           <button
             onClick={onToggle}
             className={`py-3 px-5 rounded-xl font-semibold transition-all ${
-              inStack ? "bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong hover:bg-[var(--surface-strong-1)]" : "bg-[#052b66] text-white hover:brightness-125"
+              inStack
+                ? "bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong hover:bg-[var(--surface-strong-1)]"
+                : "bg-[#052b66] text-white hover:brightness-125"
             }`}
           >
             {inStack ? "✓ In My Stack" : "+ Add to My Stack"}
@@ -284,21 +440,37 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
 }
 
 /* ---------- Stack Panel ---------- */
-function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
-  stack: number[]; tools: Tool[]; onRemove: (id: number) => void; onClear: () => void; onClose: () => void;
+function StackPanel({
+  stack,
+  tools,
+  onRemove,
+  onClear,
+  onClose,
+}: {
+  stack: number[];
+  tools: Tool[];
+  onRemove: (id: number) => void;
+  onClear: () => void;
+  onClose: () => void;
 }) {
-  const selected = tools.filter(t => stack.includes(t.id));
+  const selected = tools.filter((t) => stack.includes(t.id));
   const exportText = () => {
     const lines = [
       "MY AUTOMATION STACK",
       "AI Discovery Channel — Powered by eSTUDY South Africa",
-      "=".repeat(60), "",
-      ...selected.map((t, i) => `${i + 1}. ${t.name}${t.vendor ? ` (${t.vendor})` : ""}\n   Category: ${t.categories.join(", ")}\n   Summary: ${t.summary}\n   Benefit: ${t.benefits}\n   Best For: ${t.bestFor}\n   Link: ${t.url}\n`),
+      "=".repeat(60),
+      "",
+      ...selected.map(
+        (t, i) =>
+          `${i + 1}. ${t.name}${t.vendor ? ` (${t.vendor})` : ""}\n   Category: ${t.categories.join(", ")}\n   Summary: ${t.summary}\n   Benefit: ${t.benefits}\n   Best For: ${t.bestFor}\n   Link: ${t.url}\n`,
+      ),
     ];
     const blob = new Blob([lines.join("\n")], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = "my-automation-stack.txt"; a.click();
+    a.href = url;
+    a.download = "my-automation-stack.txt";
+    a.click();
     URL.revokeObjectURL(url);
   };
   const exportPDF = () => {
@@ -317,8 +489,14 @@ function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
       footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;color:#666;font-size:12px;text-align:center}
     </style></head><body><h1>My Automation Stack</h1>
     <div class="sub">AI Discovery Channel · ${selected.length} tools curated</div>
-    ${selected.map(t => `<div class="tool"><div><span class="name">${t.name}</span>${t.vendor ? ` <span style="color:#666;font-size:13px">— ${t.vendor}</span>` : ""}<span class="cat">${t.categories[0]}</span></div>
-    <div class="label">Summary</div><p>${t.summary}</p><div class="label">Benefits</div><p>${t.benefits}</p><div class="label">Best For</div><p>${t.bestFor}</p><div class="label">Link</div><p><a href="${t.url}">${t.url}</a></p></div>`).join("")}
+    ${selected
+      .map(
+        (
+          t,
+        ) => `<div class="tool"><div><span class="name">${t.name}</span>${t.vendor ? ` <span style="color:#666;font-size:13px">— ${t.vendor}</span>` : ""}<span class="cat">${t.categories[0]}</span></div>
+    <div class="label">Summary</div><p>${t.summary}</p><div class="label">Benefits</div><p>${t.benefits}</p><div class="label">Best For</div><p>${t.bestFor}</p><div class="label">Link</div><p><a href="${t.url}">${t.url}</a></p></div>`,
+      )
+      .join("")}
     <footer>Created by the AI Think Tank for eSTUDY South Africa · AI Discovery Channel</footer>
     <script>window.onload=()=>window.print()</script></body></html>`);
     w.document.close();
@@ -328,10 +506,19 @@ function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
     <aside className="fixed inset-y-0 right-0 z-40 w-full sm:w-96 glass-strong border-l border-[var(--surface-border)] flex flex-col animate-fade-in-up">
       <div className="flex items-center justify-between p-5 border-b border-[var(--surface-border)]">
         <div>
-          <h3 className="font-bold text-fg-strong flex items-center gap-2"><Layers className="h-4 w-4 text-accent" /> My Automation Stack</h3>
-          <p className="text-xs text-fg-mute mt-0.5">{selected.length} {selected.length === 1 ? "tool" : "tools"} selected</p>
+          <h3 className="font-bold text-fg-strong flex items-center gap-2">
+            <Layers className="h-4 w-4 text-accent" /> My Automation Stack
+          </h3>
+          <p className="text-xs text-fg-mute mt-0.5">
+            {selected.length} {selected.length === 1 ? "tool" : "tools"} selected
+          </p>
         </div>
-        <button onClick={onClose} className="grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong"><X className="h-4 w-4" /></button>
+        <button
+          onClick={onClose}
+          className="grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {selected.length === 0 && (
@@ -339,31 +526,50 @@ function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
             <div className="mx-auto h-14 w-14 grid place-items-center rounded-2xl bg-[var(--surface-1)] border border-[var(--surface-border)] mb-3">
               <Plus className="h-6 w-6 text-fg-mute" />
             </div>
-            <p className="text-sm text-fg-soft">No tools yet. Tap <span className="text-accent font-semibold">+</span> on any card to start building your stack.</p>
+            <p className="text-sm text-fg-soft">
+              No tools yet. Tap <span className="text-accent font-semibold">+</span> on any card to
+              start building your stack.
+            </p>
           </div>
         )}
-        {selected.map(t => (
+        {selected.map((t) => (
           <div key={t.id} className="glass rounded-xl p-3 flex items-center gap-3">
             <BrandLogo tool={t} size={40} />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-fg-strong truncate">{t.name}</p>
               <p className="text-[11px] text-accent truncate">{t.categories[0]}</p>
             </div>
-            <button onClick={() => onRemove(t.id)} className="grid place-items-center h-7 w-7 rounded-lg bg-[var(--surface-1)] hover:bg-destructive/30 text-fg-soft"><X className="h-3.5 w-3.5" /></button>
+            <button
+              onClick={() => onRemove(t.id)}
+              className="grid place-items-center h-7 w-7 rounded-lg bg-[var(--surface-1)] hover:bg-destructive/30 text-fg-soft"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
         ))}
       </div>
       {selected.length > 0 && (
         <div className="p-4 border-t border-[var(--surface-border)] space-y-2">
           <div className="grid grid-cols-2 gap-2">
-            <button onClick={exportText} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong text-sm hover:bg-[var(--surface-strong-1)]">
+            <button
+              onClick={exportText}
+              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong text-sm hover:bg-[var(--surface-strong-1)]"
+            >
               <Download className="h-4 w-4" /> .txt
             </button>
-            <button onClick={exportPDF} className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-accent text-accent-foreground text-sm font-semibold hover:brightness-110">
+            <button
+              onClick={exportPDF}
+              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-accent text-accent-foreground text-sm font-semibold hover:brightness-110"
+            >
               <Download className="h-4 w-4" /> PDF
             </button>
           </div>
-          <button onClick={onClear} className="w-full text-xs text-fg-mute hover:text-fg-strong py-1">Clear stack</button>
+          <button
+            onClick={onClear}
+            className="w-full text-xs text-fg-mute hover:text-fg-strong py-1"
+          >
+            Clear stack
+          </button>
         </div>
       )}
     </aside>
@@ -375,13 +581,16 @@ type ChatMsg = { role: "user" | "bot"; text: string };
 
 function recommendTools(input: string): Tool[] {
   const q = input.toLowerCase();
-  const scored = TOOLS.map(t => {
+  const scored = TOOLS.map((t) => {
     let s = 0;
-    const hay = `${t.name} ${t.categories.join(" ")} ${t.summary} ${t.benefits} ${t.bestFor} ${t.tags.join(" ")} ${t.departments.join(" ")}`.toLowerCase();
-    q.split(/\s+/).filter(w => w.length > 2).forEach(w => {
-      if (hay.includes(w)) s += 1;
-      if (t.name.toLowerCase().includes(w)) s += 2;
-    });
+    const hay =
+      `${t.name} ${t.categories.join(" ")} ${t.summary} ${t.benefits} ${t.bestFor} ${t.tags.join(" ")} ${t.departments.join(" ")}`.toLowerCase();
+    q.split(/\s+/)
+      .filter((w) => w.length > 2)
+      .forEach((w) => {
+        if (hay.includes(w)) s += 1;
+        if (t.name.toLowerCase().includes(w)) s += 2;
+      });
     const boosts: Array<[RegExp, string[]]> = [
       [/scrap|data\s*pipeline|extract/, ["Gumloop", "n8n"]],
       [/automat|workflow|orchestrat/, ["n8n", "Zapier Agents"]],
@@ -401,19 +610,29 @@ function recommendTools(input: string): Tool[] {
       [/security|privacy|compliance|popia|gdpr/, ["OneTrust", "Darktrace", "Snyk"]],
       [/legal|long\s*document|analy/, ["Claude"]],
     ];
-    boosts.forEach(([re, names]) => { if (re.test(q) && names.includes(t.name)) s += 5; });
+    boosts.forEach(([re, names]) => {
+      if (re.test(q) && names.includes(t.name)) s += 5;
+    });
     return { t, s };
-  }).filter(x => x.s > 0).sort((a, b) => b.s - a.s);
-  return scored.slice(0, 3).map(x => x.t);
+  })
+    .filter((x) => x.s > 0)
+    .sort((a, b) => b.s - a.s);
+  return scored.slice(0, 3).map((x) => x.t);
 }
 
 function botReply(input: string): { text: string; tools: Tool[] } {
   const recs = recommendTools(input);
   if (recs.length === 0) {
-    return { text: "I couldn't pinpoint the perfect match. Try describing the workflow (e.g., 'transcribe meetings', 'generate marketing copy', 'build a chatbot'). I'll cross-reference the eSTUDY Discovery database.", tools: [] };
+    return {
+      text: "I couldn't pinpoint the perfect match. Try describing the workflow (e.g., 'transcribe meetings', 'generate marketing copy', 'build a chatbot'). I'll cross-reference the eSTUDY Discovery database.",
+      tools: [],
+    };
   }
-  const names = recs.map(t => t.name);
-  const head = names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  const names = recs.map((t) => t.name);
+  const head =
+    names.length === 1
+      ? names[0]
+      : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
   return {
     text: `Based on the eSTUDY Discovery database, you should use ${head}. ${recs[0].name} is your strongest fit — ${recs[0].benefits}`,
     tools: recs,
@@ -424,7 +643,10 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [msgs, setMsgs] = useState<ChatMsg[]>([
-    { role: "bot", text: "Hi! I'm the eSTUDY AI Concierge. Describe a workflow bottleneck (e.g. 'I need to scrape websites') and I'll recommend tools from our database." },
+    {
+      role: "bot",
+      text: "Hi! I'm the eSTUDY AI Concierge. Describe a workflow bottleneck (e.g. 'I need to scrape websites') and I'll recommend tools from our database.",
+    },
   ]);
   const [recsByMsg, setRecsByMsg] = useState<Record<number, Tool[]>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -438,13 +660,13 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
     if (!q) return;
     setInput("");
     const userMsg: ChatMsg = { role: "user", text: q };
-    setMsgs(m => {
+    setMsgs((m) => {
       const next = [...m, userMsg];
       setTimeout(() => {
         const reply = botReply(q);
-        setMsgs(mm => {
+        setMsgs((mm) => {
           const idx = mm.length;
-          setRecsByMsg(r => ({ ...r, [idx]: reply.tools }));
+          setRecsByMsg((r) => ({ ...r, [idx]: reply.tools }));
           return [...mm, { role: "bot", text: reply.text }];
         });
       }, 450);
@@ -455,7 +677,7 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
   return (
     <>
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         className="fixed bottom-5 right-5 z-40 grid place-items-center h-14 w-14 rounded-full bg-accent text-accent-foreground shadow-[0_10px_40px_-10px_rgba(69,204,66,0.7)] hover:scale-105 transition-all animate-pulse-glow"
         aria-label="AI Concierge"
       >
@@ -471,26 +693,46 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
               <p className="text-sm font-bold text-fg-strong">eSTUDY AI Concierge</p>
               <p className="text-[11px] text-fg-mute">Recommends from 70+ tools</p>
             </div>
-            <button onClick={() => { setMsgs(m => m.slice(0, 1)); setRecsByMsg({}); }} className="grid place-items-center h-8 w-8 rounded-lg bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-soft" title="Reset">
+            <button
+              onClick={() => {
+                setMsgs((m) => m.slice(0, 1));
+                setRecsByMsg({});
+              }}
+              className="grid place-items-center h-8 w-8 rounded-lg bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-soft"
+              title="Reset"
+            >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
             {msgs.map((m, i) => (
-              <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={i}
+                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+              >
                 <div className={`max-w-[85%] ${m.role === "user" ? "" : "w-full"}`}>
-                  <div className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                    m.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-sm"
-                      : "bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong rounded-bl-sm"
-                  }`}>{m.text}</div>
+                  <div
+                    className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                      m.role === "user"
+                        ? "bg-primary text-primary-foreground rounded-br-sm"
+                        : "bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong rounded-bl-sm"
+                    }`}
+                  >
+                    {m.text}
+                  </div>
                   {recsByMsg[i] && recsByMsg[i].length > 0 && (
                     <div className="mt-2 space-y-1.5">
-                      {recsByMsg[i].map(t => (
-                        <button key={t.id} onClick={() => onOpenTool(t)} className="w-full flex items-center gap-2 p-2 rounded-xl bg-[var(--surface-strong-1)] border border-accent/30 hover:border-accent hover:bg-accent/10 transition-all text-left">
+                      {recsByMsg[i].map((t) => (
+                        <button
+                          key={t.id}
+                          onClick={() => onOpenTool(t)}
+                          className="w-full flex items-center gap-2 p-2 rounded-xl bg-[var(--surface-strong-1)] border border-accent/30 hover:border-accent hover:bg-accent/10 transition-all text-left"
+                        >
                           <BrandLogo tool={t} size={32} />
                           <div className="min-w-0 flex-1">
-                            <p className="text-xs font-semibold text-fg-strong truncate">{t.name}</p>
+                            <p className="text-xs font-semibold text-fg-strong truncate">
+                              {t.name}
+                            </p>
                             <p className="text-[10px] text-fg-mute truncate">{t.categories[0]}</p>
                           </div>
                           <ExternalLink className="h-3 w-3 text-accent" />
@@ -505,12 +747,15 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
           <div className="p-3 border-t border-[var(--surface-border)] flex gap-2">
             <input
               value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && send()}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Describe your workflow problem…"
               className="flex-1 px-3 py-2 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent text-sm"
             />
-            <button onClick={send} className="grid place-items-center h-10 w-10 rounded-xl bg-accent text-accent-foreground hover:brightness-110">
+            <button
+              onClick={send}
+              className="grid place-items-center h-10 w-10 rounded-xl bg-accent text-accent-foreground hover:brightness-110"
+            >
               <Send className="h-4 w-4" />
             </button>
           </div>
@@ -528,18 +773,39 @@ function AboutPage() {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-5">
           <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> OUR MISSION
         </div>
-        <h1 className="text-4xl sm:text-6xl font-black tracking-tight"><span className="text-fg-strong">About the </span><span className="text-gradient">Discovery Channel</span></h1>
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight">
+          <span className="text-fg-strong">About the </span>
+          <span className="text-gradient">Discovery Channel</span>
+        </h1>
         <p className="mt-5 max-w-2xl mx-auto text-lg text-fg-soft leading-relaxed">
-          eSTUDY South Africa's leading operational research hub — empowering internal talent with cutting-edge digital transformation, B-BBEE aligned skills training, and automation force-multipliers.
+          eSTUDY South Africa's leading operational research hub — empowering internal talent with
+          cutting-edge digital transformation, B-BBEE aligned skills training, and automation
+          force-multipliers.
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-5">
         {[
-          { icon: Sparkles, title: "Curated, Not Crowded", body: "Every tool in our directory is hand-vetted against enterprise readiness, security posture, and measurable ROI for South African operations." },
-          { icon: Building2, title: "Built for eSTUDY Teams", body: "From Finance to Learning Design, each department gets a tailored slice of the AI universe matched to the workflows you actually run." },
-          { icon: TrendingUp, title: "B-BBEE Aligned Skills", body: "We pair AI tooling with structured upskilling pathways — accelerating digital transformation while advancing transformation targets." },
-          { icon: Zap, title: "Automation Force-Multipliers", body: "Highlighted picks (n8n, Zapier Agents, Gumloop, Cursor) compress days of manual ops into minutes of orchestrated execution." },
+          {
+            icon: Sparkles,
+            title: "Curated, Not Crowded",
+            body: "Every tool in our directory is hand-vetted against enterprise readiness, security posture, and measurable ROI for South African operations.",
+          },
+          {
+            icon: Building2,
+            title: "Built for eSTUDY Teams",
+            body: "From Finance to Learning Design, each department gets a tailored slice of the AI universe matched to the workflows you actually run.",
+          },
+          {
+            icon: TrendingUp,
+            title: "B-BBEE Aligned Skills",
+            body: "We pair AI tooling with structured upskilling pathways — accelerating digital transformation while advancing transformation targets.",
+          },
+          {
+            icon: Zap,
+            title: "Automation Force-Multipliers",
+            body: "Highlighted picks (n8n, Zapier Agents, Gumloop, Cursor) compress days of manual ops into minutes of orchestrated execution.",
+          },
         ].map((c, i) => (
           <div key={i} className="glass rounded-2xl p-6 hover:border-accent/40 transition-all">
             <div className="grid place-items-center h-12 w-12 rounded-xl bg-accent/15 text-accent border border-accent/30 mb-3">
@@ -554,7 +820,8 @@ function AboutPage() {
       <div className="mt-10 glass-strong rounded-3xl p-8 text-center border border-accent/20">
         <h2 className="text-2xl font-bold text-fg-strong mb-2">Our north star</h2>
         <p className="text-fg-soft max-w-2xl mx-auto leading-relaxed">
-          To make AI tooling instantly legible to every eSTUDY professional — so the right tool is always one tap, one search, or one conversation away.
+          To make AI tooling instantly legible to every eSTUDY professional — so the right tool is
+          always one tap, one search, or one conversation away.
         </p>
       </div>
     </main>
@@ -563,9 +830,9 @@ function AboutPage() {
 
 /* ---------- Trends Page (LinkedIn-style feed) ---------- */
 function TrendsPage() {
-  const topics = useMemo(() => Array.from(new Set(FEED_POSTS.map(p => p.topic))), []);
+  const topics = useMemo(() => Array.from(new Set(FEED_POSTS.map((p) => p.topic))), []);
   const [topic, setTopic] = useState<string | null>(null);
-  const posts = topic ? FEED_POSTS.filter(p => p.topic === topic) : FEED_POSTS;
+  const posts = topic ? FEED_POSTS.filter((p) => p.topic === topic) : FEED_POSTS;
 
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
@@ -573,19 +840,35 @@ function TrendsPage() {
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-4">
           <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> LIVE FEED
         </div>
-        <h1 className="text-4xl sm:text-5xl font-black"><span className="text-fg-strong">AI Trends </span><span className="text-gradient">Hub</span></h1>
-        <p className="mt-3 text-fg-soft max-w-xl mx-auto">A professional feed of AI corporate trends, new tools and digital transformation news.</p>
+        <h1 className="text-4xl sm:text-5xl font-black">
+          <span className="text-fg-strong">AI Trends </span>
+          <span className="text-gradient">Hub</span>
+        </h1>
+        <p className="mt-3 text-fg-soft max-w-xl mx-auto">
+          A professional feed of AI corporate trends, new tools and digital transformation news.
+        </p>
       </div>
 
       <div className="glass-strong rounded-2xl p-3 mb-5 flex flex-wrap gap-1.5 sticky top-[72px] z-20">
-        <button onClick={() => setTopic(null)} className={`text-xs px-3 py-1.5 rounded-full border ${!topic ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"}`}>All Topics</button>
-        {topics.map(t => (
-          <button key={t} onClick={() => setTopic(topic === t ? null : t)} className={`text-xs px-3 py-1.5 rounded-full border ${topic === t ? "bg-primary text-primary-foreground border-primary" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"}`}>{t}</button>
+        <button
+          onClick={() => setTopic(null)}
+          className={`text-xs px-3 py-1.5 rounded-full border ${!topic ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"}`}
+        >
+          All Topics
+        </button>
+        {topics.map((t) => (
+          <button
+            key={t}
+            onClick={() => setTopic(topic === t ? null : t)}
+            className={`text-xs px-3 py-1.5 rounded-full border ${topic === t ? "bg-primary text-primary-foreground border-primary" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"}`}
+          >
+            {t}
+          </button>
         ))}
       </div>
 
       <div className="space-y-4">
-        {posts.map(p => (
+        {posts.map((p) => (
           <FeedCard key={p.id} post={p} />
         ))}
       </div>
@@ -593,9 +876,28 @@ function TrendsPage() {
   );
 }
 
-function FeedCard({ post }: { post: { id: number; author: string; role: string; org: string; time: string; body: string; topic: string; reactions: number; comments: number } }) {
+function FeedCard({
+  post,
+}: {
+  post: {
+    id: number;
+    author: string;
+    role: string;
+    org: string;
+    time: string;
+    body: string;
+    topic: string;
+    reactions: number;
+    comments: number;
+  };
+}) {
   const [liked, setLiked] = useState(false);
-  const init = post.author.split(" ").slice(0, 2).map(s => s[0]).join("").toUpperCase();
+  const init = post.author
+    .split(" ")
+    .slice(0, 2)
+    .map((s) => s[0])
+    .join("")
+    .toUpperCase();
   return (
     <article className="glass rounded-2xl p-5 hover:border-accent/30 transition-all">
       <header className="flex items-start gap-3">
@@ -604,21 +906,30 @@ function FeedCard({ post }: { post: { id: number; author: string; role: string; 
         </div>
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-fg-strong truncate">{post.author}</p>
-          <p className="text-xs text-fg-soft truncate">{post.role} · {post.org}</p>
+          <p className="text-xs text-fg-soft truncate">
+            {post.role} · {post.org}
+          </p>
           <p className="text-[11px] text-fg-mute mt-0.5">{post.time} · 🌐</p>
         </div>
-        <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-accent/15 text-accent border border-accent/30 shrink-0">{post.topic}</span>
+        <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-accent/15 text-accent border border-accent/30 shrink-0">
+          {post.topic}
+        </span>
       </header>
       <p className="mt-4 text-fg-strong leading-relaxed whitespace-pre-line">{post.body}</p>
       <div className="mt-4 flex items-center justify-between text-xs text-fg-mute pb-2 border-b border-[var(--surface-border)]">
         <span className="flex items-center gap-1">
-          <span className="grid place-items-center h-4 w-4 rounded-full bg-accent text-accent-foreground"><ThumbsUp className="h-2.5 w-2.5" /></span>
+          <span className="grid place-items-center h-4 w-4 rounded-full bg-accent text-accent-foreground">
+            <ThumbsUp className="h-2.5 w-2.5" />
+          </span>
           {post.reactions + (liked ? 1 : 0)}
         </span>
         <span>{post.comments} comments</span>
       </div>
       <div className="mt-2 grid grid-cols-3 gap-1">
-        <button onClick={() => setLiked(l => !l)} className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${liked ? "text-accent bg-accent/10" : "text-fg-soft hover:bg-[var(--surface-1)]"}`}>
+        <button
+          onClick={() => setLiked((l) => !l)}
+          className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${liked ? "text-accent bg-accent/10" : "text-fg-soft hover:bg-[var(--surface-1)]"}`}
+        >
           <ThumbsUp className="h-3.5 w-3.5" /> Like
         </button>
         <button className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all">
@@ -633,32 +944,55 @@ function FeedCard({ post }: { post: { id: number; author: string; role: string; 
 }
 
 /* ---------- Compare Page ---------- */
-function ComparePage({ tools, compare, onToggle, onClear }: {
-  tools: Tool[]; compare: number[]; onToggle: (id: number) => void; onClear: () => void;
+function ComparePage({
+  tools,
+  compare,
+  onToggle,
+  onClear,
+}: {
+  tools: Tool[];
+  compare: number[];
+  onToggle: (id: number) => void;
+  onClear: () => void;
 }) {
   const [search, setSearch] = useState("");
-  const selected = tools.filter(t => compare.includes(t.id));
-  const list = tools.filter(t => t.name.toLowerCase().includes(search.toLowerCase())).slice(0, 8);
+  const selected = tools.filter((t) => compare.includes(t.id));
+  const list = tools.filter((t) => t.name.toLowerCase().includes(search.toLowerCase())).slice(0, 8);
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div className="text-center mb-10">
-        <h1 className="text-4xl sm:text-5xl font-black"><span className="text-fg-strong">Side-by-side </span><span className="text-gradient">Compare</span></h1>
-        <p className="mt-3 text-fg-soft max-w-xl mx-auto">Select up to 4 tools to compare their capabilities, tags, and fit.</p>
+        <h1 className="text-4xl sm:text-5xl font-black">
+          <span className="text-fg-strong">Side-by-side </span>
+          <span className="text-gradient">Compare</span>
+        </h1>
+        <p className="mt-3 text-fg-soft max-w-xl mx-auto">
+          Select up to 4 tools to compare their capabilities, tags, and fit.
+        </p>
       </div>
 
       <div className="glass-strong rounded-2xl p-4 mb-6">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-mute" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Add a tool to comparison…" className="w-full pl-11 pr-4 py-3 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Add a tool to comparison…"
+            className="w-full pl-11 pr-4 py-3 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent"
+          />
         </div>
         {search && (
           <div className="mt-3 flex flex-wrap gap-2">
-            {list.map(t => {
+            {list.map((t) => {
               const on = compare.includes(t.id);
               const full = compare.length >= 4 && !on;
               return (
-                <button key={t.id} disabled={full} onClick={() => onToggle(t.id)} className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border transition-all ${on ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-strong hover:border-accent disabled:opacity-40"}`}>
+                <button
+                  key={t.id}
+                  disabled={full}
+                  onClick={() => onToggle(t.id)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border transition-all ${on ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-strong hover:border-accent disabled:opacity-40"}`}
+                >
                   {on ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />} {t.name}
                 </button>
               );
@@ -667,22 +1001,36 @@ function ComparePage({ tools, compare, onToggle, onClear }: {
         )}
         <div className="mt-3 flex items-center justify-between">
           <p className="text-xs text-fg-mute">{selected.length} / 4 selected</p>
-          {selected.length > 0 && <button onClick={onClear} className="text-xs text-accent hover:underline">Clear all</button>}
+          {selected.length > 0 && (
+            <button onClick={onClear} className="text-xs text-accent hover:underline">
+              Clear all
+            </button>
+          )}
         </div>
       </div>
 
       {selected.length === 0 ? (
         <div className="glass rounded-2xl p-16 text-center">
           <GitCompare className="h-10 w-10 text-fg-mute mx-auto mb-3" />
-          <p className="text-fg-soft">Search above or use the compare button on any tool card to begin.</p>
+          <p className="text-fg-soft">
+            Search above or use the compare button on any tool card to begin.
+          </p>
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <div className="grid gap-4 min-w-max" style={{ gridTemplateColumns: `180px repeat(${selected.length}, minmax(240px, 1fr))` }}>
+          <div
+            className="grid gap-4 min-w-max"
+            style={{ gridTemplateColumns: `180px repeat(${selected.length}, minmax(240px, 1fr))` }}
+          >
             <div />
-            {selected.map(t => (
+            {selected.map((t) => (
               <div key={t.id} className="glass-strong rounded-2xl p-5 relative">
-                <button onClick={() => onToggle(t.id)} className="absolute top-2 right-2 grid place-items-center h-7 w-7 rounded-full bg-[var(--surface-1)] hover:bg-destructive/30 text-fg-soft"><X className="h-3.5 w-3.5" /></button>
+                <button
+                  onClick={() => onToggle(t.id)}
+                  className="absolute top-2 right-2 grid place-items-center h-7 w-7 rounded-full bg-[var(--surface-1)] hover:bg-destructive/30 text-fg-soft"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
                 <BrandLogo tool={t} size={56} />
                 <h3 className="mt-3 font-bold text-fg-strong">{t.name}</h3>
                 {t.vendor && <p className="text-xs text-fg-mute">{t.vendor}</p>}
@@ -696,9 +1044,14 @@ function ComparePage({ tools, compare, onToggle, onClear }: {
               ["Best Used For", (t: Tool) => t.bestFor],
               ["Tags", (t: Tool) => t.tags.join(" · ")],
               ["Departments", (t: Tool) => t.departments.join(", ") || "—"],
-              ["Enterprise Pick", (t: Tool) => ENTERPRISE_HIGHLIGHTS.has(t.name) ? "★ Yes" : "—"],
+              ["Enterprise Pick", (t: Tool) => (ENTERPRISE_HIGHLIGHTS.has(t.name) ? "★ Yes" : "—")],
             ].map(([label, fn]) => (
-              <FieldRow key={label as string} label={label as string} selected={selected} render={fn as (t: Tool) => string} />
+              <FieldRow
+                key={label as string}
+                label={label as string}
+                selected={selected}
+                render={fn as (t: Tool) => string}
+              />
             ))}
           </div>
         </div>
@@ -707,12 +1060,24 @@ function ComparePage({ tools, compare, onToggle, onClear }: {
   );
 }
 
-function FieldRow({ label, selected, render }: { label: string; selected: Tool[]; render: (t: Tool) => string }) {
+function FieldRow({
+  label,
+  selected,
+  render,
+}: {
+  label: string;
+  selected: Tool[];
+  render: (t: Tool) => string;
+}) {
   return (
     <>
-      <div className="px-3 py-3 text-xs font-bold uppercase tracking-wider text-accent self-center">{label}</div>
-      {selected.map(t => (
-        <div key={t.id} className="glass rounded-xl p-4 text-sm text-fg-soft leading-relaxed">{render(t)}</div>
+      <div className="px-3 py-3 text-xs font-bold uppercase tracking-wider text-accent self-center">
+        {label}
+      </div>
+      {selected.map((t) => (
+        <div key={t.id} className="glass rounded-xl p-4 text-sm text-fg-soft leading-relaxed">
+          {render(t)}
+        </div>
       ))}
     </>
   );
@@ -726,18 +1091,16 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate dispatch to both eSTUDY organizational inboxes
     const subject = encodeURIComponent(`[AI Discovery Channel] ${form.subject || "Inquiry"}`);
     const body = encodeURIComponent(
       `New message from the AI Discovery Channel\n\n` +
-      `Name: ${form.name}\n` +
-      `Department: ${form.dept}\n` +
-      `Email: ${form.email}\n\n` +
-      `Message:\n${form.message}\n\n` +
-      `— Dispatched to: ${CONTACT_EMAILS.join(", ")}`
+        `Name: ${form.name}\n` +
+        `Department: ${form.dept}\n` +
+        `Email: ${form.email}\n\n` +
+        `Message:\n${form.message}\n\n` +
+        `— Dispatched to: ${CONTACT_EMAILS.join(", ")}`,
     );
     const mailto = `mailto:${CONTACT_EMAILS.join(",")}?subject=${subject}&body=${body}`;
-    // Open user's mail client with both recipients pre-filled
     window.location.href = mailto;
     setSent(true);
     setTimeout(() => setSent(false), 6000);
@@ -746,67 +1109,158 @@ function ContactPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
       <div className="text-center mb-10">
-        <h1 className="text-4xl sm:text-5xl font-black"><span className="text-fg-strong">Get in </span><span className="text-gradient">touch</span></h1>
-        <p className="mt-3 text-fg-soft max-w-xl mx-auto">Report a platform issue or request a new tool addition. Messages route directly to <span className="text-accent font-semibold">{CONTACT_EMAILS.join(" & ")}</span>.</p>
+        <h1 className="text-4xl sm:text-5xl font-black">
+          <span className="text-fg-strong">Get in </span>
+          <span className="text-gradient">touch</span>
+        </h1>
+        <p className="mt-3 text-fg-soft max-w-xl mx-auto">
+          Report a platform issue or request a new tool addition. Messages route directly to{" "}
+          <span className="text-accent font-semibold">{CONTACT_EMAILS.join(" & ")}</span>.
+        </p>
       </div>
 
       <form onSubmit={submit} className="glass-strong rounded-3xl p-7 space-y-4">
         {sent && (
           <div className="rounded-xl bg-accent/15 border border-accent/40 p-3 text-sm text-fg-strong flex items-center gap-2">
-            <Check className="h-4 w-4 text-accent" /> Message dispatched to the eSTUDY ops team — we'll reply shortly.
+            <Check className="h-4 w-4 text-accent" /> Message dispatched to the eSTUDY ops team —
+            we'll reply shortly.
           </div>
         )}
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Full name" value={form.name} onChange={v => setForm({ ...form, name: v })} required />
-          <SelectField label="eSTUDY Department" value={form.dept} onChange={v => setForm({ ...form, dept: v })}
-            options={[...DEPARTMENTS, "Other / Executive"]} />
+          <Field
+            label="Full name"
+            value={form.name}
+            onChange={(v) => setForm({ ...form, name: v })}
+            required
+          />
+          <SelectField
+            label="eSTUDY Department"
+            value={form.dept}
+            onChange={(v) => setForm({ ...form, dept: v })}
+            options={[...DEPARTMENTS, "Other / Executive"]}
+          />
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Work email" type="email" value={form.email} onChange={v => setForm({ ...form, email: v })} required />
-          <Field label="Subject" value={form.subject} onChange={v => setForm({ ...form, subject: v })} required />
+          <Field
+            label="Work email"
+            type="email"
+            value={form.email}
+            onChange={(v) => setForm({ ...form, email: v })}
+            required
+          />
+          <Field
+            label="Subject"
+            value={form.subject}
+            onChange={(v) => setForm({ ...form, subject: v })}
+            required
+          />
         </div>
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-fg-soft mb-2">Message</label>
-          <textarea required value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} rows={6}
+          <label className="block text-xs font-semibold uppercase tracking-wider text-fg-soft mb-2">
+            Message
+          </label>
+          <textarea
+            required
+            value={form.message}
+            onChange={(e) => setForm({ ...form, message: e.target.value })}
+            rows={6}
             placeholder="Describe the issue, question, or tool suggestion…"
-            className="w-full px-4 py-3 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent resize-none" />
+            className="w-full px-4 py-3 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent resize-none"
+          />
         </div>
-        <button type="submit" className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-bold hover:brightness-110 transition-all flex items-center justify-center gap-2">
+        <button
+          type="submit"
+          className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-bold hover:brightness-110 transition-all flex items-center justify-center gap-2"
+        >
           <Send className="h-4 w-4" /> Send message
         </button>
-        <p className="text-[11px] text-fg-mute text-center">Your message is routed to <span className="font-semibold">{CONTACT_EMAILS[0]}</span> and <span className="font-semibold">{CONTACT_EMAILS[1]}</span>.</p>
+        <p className="text-[11px] text-fg-mute text-center">
+          Your message is routed to <span className="font-semibold">{CONTACT_EMAILS[0]}</span> and{" "}
+          <span className="font-semibold">{CONTACT_EMAILS[1]}</span>.
+        </p>
       </form>
     </main>
   );
 }
 
-function Field({ label, value, onChange, type = "text", required }: { label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean }) {
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+  required,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  required?: boolean;
+}) {
   return (
     <div>
-      <label className="block text-xs font-semibold uppercase tracking-wider text-fg-soft mb-2">{label}</label>
-      <input type={type} required={required} value={value} onChange={e => onChange(e.target.value)}
-        className="w-full px-4 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent" />
+      <label className="block text-xs font-semibold uppercase tracking-wider text-fg-soft mb-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        required={required}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-4 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent"
+      />
     </div>
   );
 }
-function SelectField({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
+function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+}) {
   return (
     <div>
-      <label className="block text-xs font-semibold uppercase tracking-wider text-fg-soft mb-2">{label}</label>
-      <select required value={value} onChange={e => onChange(e.target.value)}
-        className="w-full px-4 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong outline-none focus:border-accent">
+      <label className="block text-xs font-semibold uppercase tracking-wider text-fg-soft mb-2">
+        {label}
+      </label>
+      <select
+        required
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-4 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong outline-none focus:border-accent"
+      >
         <option value="">Select…</option>
-        {options.map(o => <option key={o} value={o} className="bg-background text-fg-strong">{o}</option>)}
+        {options.map((o) => (
+          <option key={o} value={o} className="bg-background text-fg-strong">
+            {o}
+          </option>
+        ))}
       </select>
     </div>
   );
 }
 
 /* ---------- Header / Nav ---------- */
-function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilters }: {
-  page: Page; setPage: (p: Page) => void;
-  theme: "dark" | "light"; toggleTheme: () => void;
-  stackCount: number; onStack: () => void; onFilters: () => void;
+function Header({
+  page,
+  setPage,
+  theme,
+  toggleTheme,
+  stackCount,
+  onStack,
+  onFilters,
+}: {
+  page: Page;
+  setPage: (p: Page) => void;
+  theme: "dark" | "light";
+  toggleTheme: () => void;
+  stackCount: number;
+  onStack: () => void;
+  onFilters: () => void;
 }) {
   const nav: { key: Page; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: "home", label: "Home", icon: HomeIcon },
@@ -824,16 +1278,23 @@ function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilt
           </div>
           <div className="min-w-0 text-left hidden sm:block">
             <p className="text-sm font-bold text-white truncate">AI Discovery Channel</p>
-            <p className="text-[10px] text-white/60 tracking-wider truncate">POWERED BY eSTUDY SOUTH AFRICA</p>
+            <p className="text-[10px] text-white/60 tracking-wider truncate">
+              POWERED BY eSTUDY SOUTH AFRICA
+            </p>
           </div>
         </button>
 
         <nav className="hidden md:flex items-center gap-1 ml-4">
-          {nav.map(n => (
-            <button key={n.key} onClick={() => setPage(n.key)}
+          {nav.map((n) => (
+            <button
+              key={n.key}
+              onClick={() => setPage(n.key)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                page === n.key ? "bg-accent text-accent-foreground shadow-[0_4px_15px_rgba(69,204,66,0.4)]" : "text-white/75 hover:text-white hover:bg-white/10"
-              }`}>
+                page === n.key
+                  ? "bg-accent text-accent-foreground shadow-[0_4px_15px_rgba(69,204,66,0.4)]"
+                  : "text-white/75 hover:text-white hover:bg-white/10"
+              }`}
+            >
               <n.icon className="h-3.5 w-3.5" /> {n.label}
             </button>
           ))}
@@ -842,29 +1303,44 @@ function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilt
         <div className="flex-1" />
 
         <div className="flex items-center gap-2 shrink-0">
-          <button onClick={toggleTheme} aria-label="Toggle theme"
-            className="grid place-items-center h-10 w-10 rounded-xl bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:scale-105 transition-all">
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="grid place-items-center h-10 w-10 rounded-xl bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:scale-105 transition-all"
+          >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           {page === "home" && (
-            <button onClick={onFilters} className="lg:hidden grid place-items-center h-10 w-10 rounded-xl bg-white/10 border border-white/10 text-white hover:bg-white/20" aria-label="Filters">
+            <button
+              onClick={onFilters}
+              className="lg:hidden grid place-items-center h-10 w-10 rounded-xl bg-white/10 border border-white/10 text-white hover:bg-white/20"
+              aria-label="Filters"
+            >
               <Menu className="h-4 w-4" />
             </button>
           )}
-          <button onClick={onStack} className="relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-accent text-accent-foreground font-semibold text-sm hover:brightness-110 transition-all shadow-[0_8px_24px_-8px_rgba(69,204,66,0.6)]">
+          <button
+            onClick={onStack}
+            className="relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-accent text-accent-foreground font-semibold text-sm hover:brightness-110 transition-all shadow-[0_8px_24px_-8px_rgba(69,204,66,0.6)]"
+          >
             <Layers className="h-4 w-4" />
             <span className="hidden sm:inline">My Stack</span>
-            <span className="grid place-items-center h-5 min-w-5 px-1 rounded-full bg-[#052b66] text-white text-[11px] font-bold">{stackCount}</span>
+            <span className="grid place-items-center h-5 min-w-5 px-1 rounded-full bg-[#052b66] text-white text-[11px] font-bold">
+              {stackCount}
+            </span>
           </button>
         </div>
       </div>
 
       <nav className="md:hidden border-t border-white/10 px-2 py-2 flex items-center justify-around bg-[#041f4a]">
-        {nav.map(n => (
-          <button key={n.key} onClick={() => setPage(n.key)}
+        {nav.map((n) => (
+          <button
+            key={n.key}
+            onClick={() => setPage(n.key)}
             className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-[11px] transition-all ${
               page === n.key ? "text-accent" : "text-white/60"
-            }`}>
+            }`}
+          >
             <n.icon className="h-4 w-4" /> {n.label}
           </button>
         ))}
@@ -889,10 +1365,10 @@ export function AIDiscoveryApp() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return TOOLS.filter(t => {
+    return TOOLS.filter((t) => {
       if (activeCat && !t.categories.includes(activeCat)) return false;
       if (activeDept && !t.departments.includes(activeDept)) return false;
-      if (activeTags.length && !activeTags.every(tag => t.tags.includes(tag))) return false;
+      if (activeTags.length && !activeTags.every((tag) => t.tags.includes(tag))) return false;
       if (!q) return true;
       return (
         t.name.toLowerCase().includes(q) ||
@@ -900,40 +1376,55 @@ export function AIDiscoveryApp() {
         t.summary.toLowerCase().includes(q) ||
         t.benefits.toLowerCase().includes(q) ||
         t.bestFor.toLowerCase().includes(q) ||
-        t.categories.some(c => c.toLowerCase().includes(q))
+        t.categories.some((c) => c.toLowerCase().includes(q))
       );
     });
   }, [query, activeCat, activeTags, activeDept]);
 
   const counts = useMemo(() => {
     const m = new Map<Category, number>();
-    CATEGORIES.forEach(c => m.set(c.key, 0));
-    TOOLS.forEach(t => t.categories.forEach(c => m.set(c, (m.get(c) || 0) + 1)));
+    CATEGORIES.forEach((c) => m.set(c.key, 0));
+    TOOLS.forEach((t) => t.categories.forEach((c) => m.set(c, (m.get(c) || 0) + 1)));
     return m;
   }, []);
 
-  const trending = useMemo(() => TRENDING.map(n => TOOLS.find(t => t.name === n)).filter(Boolean) as Tool[], []);
+  const trending = useMemo(
+    () => TRENDING.map((n) => TOOLS.find((t) => t.name === n)).filter(Boolean) as Tool[],
+    [],
+  );
 
-  const addToStack = (id: number) => setStack(s => (s.includes(id) ? s : [...s, id]));
-  const toggleStack = (id: number) => setStack(s => (s.includes(id) ? s.filter(x => x !== id) : [...s, id]));
-  const toggleTag = (tag: Tag) => setActiveTags(s => (s.includes(tag) ? s.filter(t => t !== tag) : [...s, tag]));
-  const toggleCompare = (id: number) => setCompare(s => (s.includes(id) ? s.filter(x => x !== id) : s.length >= 4 ? s : [...s, id]));
+  const addToStack = (id: number) => setStack((s) => (s.includes(id) ? s : [...s, id]));
+  const toggleStack = (id: number) =>
+    setStack((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const toggleTag = (tag: Tag) =>
+    setActiveTags((s) => (s.includes(tag) ? s.filter((t) => t !== tag) : [...s, tag]));
+  const toggleCompare = (id: number) =>
+    setCompare((s) =>
+      s.includes(id) ? s.filter((x) => x !== id) : s.length >= 4 ? s : [...s, id],
+    );
 
   return (
     <div className="min-h-screen">
       <Header
-        page={page} setPage={setPage}
-        theme={theme} toggleTheme={toggle}
+        page={page}
+        setPage={setPage}
+        theme={theme}
+        toggleTheme={toggle}
         stackCount={stack.length}
         onStack={() => setStackOpen(true)}
-        onFilters={() => setFiltersOpen(v => !v)}
+        onFilters={() => setFiltersOpen((v) => !v)}
       />
 
       {page === "about" && <AboutPage />}
       {page === "trends" && <TrendsPage />}
       {page === "contact" && <ContactPage />}
       {page === "compare" && (
-        <ComparePage tools={TOOLS} compare={compare} onToggle={toggleCompare} onClear={() => setCompare([])} />
+        <ComparePage
+          tools={TOOLS}
+          compare={compare}
+          onToggle={toggleCompare}
+          onClear={() => setCompare([])}
+        />
       )}
 
       {page === "home" && (
@@ -950,20 +1441,24 @@ export function AIDiscoveryApp() {
                 <span className="text-gradient">Channel</span>
               </h1>
               <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-fg-soft leading-relaxed">
-                eSTUDY South Africa's expert directory of 70+ enterprise-grade AI tools — engineered to help your teams
-                discover, compare, and assemble the perfect automation stack.
+                eSTUDY South Africa's expert directory of 70+ enterprise-grade AI tools — engineered
+                to help your teams discover, compare, and assemble the perfect automation stack.
               </p>
 
               <div className="mt-9 max-w-2xl mx-auto">
                 <div className="relative group">
                   <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-fg-mute group-focus-within:text-accent transition-colors" />
                   <input
-                    value={query} onChange={e => setQuery(e.target.value)}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search by name, expertise, or keyword…"
                     className="w-full pl-14 pr-5 py-4 rounded-2xl glass-strong text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent focus:shadow-[0_0_0_4px_rgba(69,204,66,0.15)] transition-all text-base"
                   />
                   {query && (
-                    <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 grid place-items-center h-7 w-7 rounded-full bg-[var(--surface-strong-1)] text-fg-soft hover:bg-[var(--surface-strong-2)]">
+                    <button
+                      onClick={() => setQuery("")}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 grid place-items-center h-7 w-7 rounded-full bg-[var(--surface-strong-1)] text-fg-soft hover:bg-[var(--surface-strong-2)]"
+                    >
                       <X className="h-3.5 w-3.5" />
                     </button>
                   )}
@@ -975,10 +1470,12 @@ export function AIDiscoveryApp() {
                   { value: TOOLS.length, label: "Curated Tools" },
                   { value: CATEGORIES.length, label: "Business Dimensions" },
                   { value: filtered.length, label: "Matching Now" },
-                ].map(s => (
+                ].map((s) => (
                   <div key={s.label} className="glass rounded-2xl p-4 sm:p-5">
                     <div className="text-2xl sm:text-4xl font-black text-gradient">{s.value}</div>
-                    <div className="text-[10px] sm:text-xs uppercase tracking-wider text-fg-mute mt-1">{s.label}</div>
+                    <div className="text-[10px] sm:text-xs uppercase tracking-wider text-fg-mute mt-1">
+                      {s.label}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -994,8 +1491,12 @@ export function AIDiscoveryApp() {
               <span className="text-xs text-fg-mute">Updated weekly</span>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
-              {trending.map(t => (
-                <button key={t.id} onClick={() => setOpenTool(t)} className="snap-start shrink-0 w-56 glass rounded-2xl p-4 text-left hover:border-accent/40 hover:-translate-y-1 transition-all">
+              {trending.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setOpenTool(t)}
+                  className="snap-start shrink-0 w-56 glass rounded-2xl p-4 text-left hover:border-accent/40 hover:-translate-y-1 transition-all"
+                >
                   <div className="flex items-center gap-3">
                     <BrandLogo tool={t} size={44} />
                     <div className="min-w-0 flex-1">
@@ -1015,18 +1516,33 @@ export function AIDiscoveryApp() {
             <div className="glass-strong rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Building2 className="h-4 w-4 text-accent" />
-                <p className="text-xs font-bold uppercase tracking-wider text-fg-strong">Filter by eSTUDY Department</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-fg-strong">
+                  Filter by eSTUDY Department
+                </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => setActiveDept(null)}
+                <button
+                  onClick={() => setActiveDept(null)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                    !activeDept ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"
-                  }`}>All Departments</button>
-                {DEPARTMENTS.map(d => (
-                  <button key={d} onClick={() => setActiveDept(activeDept === d ? null : d)}
+                    !activeDept
+                      ? "bg-accent text-accent-foreground border-accent"
+                      : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"
+                  }`}
+                >
+                  All Departments
+                </button>
+                {DEPARTMENTS.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setActiveDept(activeDept === d ? null : d)}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                      activeDept === d ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(5,43,102,0.4)]" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"
-                    }`}>{d}</button>
+                      activeDept === d
+                        ? "bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(5,43,102,0.4)]"
+                        : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"
+                    }`}
+                  >
+                    {d}
+                  </button>
                 ))}
               </div>
             </div>
@@ -1035,36 +1551,76 @@ export function AIDiscoveryApp() {
           {/* Main grid */}
           <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
             <div className="grid lg:grid-cols-[300px_minmax(0,1fr)] gap-6">
-              <aside className={`${filtersOpen ? "block" : "hidden"} lg:block lg:sticky lg:top-[88px] lg:self-start`}>
+              <aside
+                className={`${filtersOpen ? "block" : "hidden"} lg:block lg:sticky lg:top-[88px] lg:self-start`}
+                style={{ maxHeight: "calc(100vh - 120px)", overflowY: "auto" }}
+              >
                 <div className="glass-strong rounded-2xl p-4 space-y-5">
                   <div>
                     <div className="flex items-center justify-between mb-3 px-1">
                       <h3 className="text-xs font-bold uppercase tracking-wider text-fg-strong flex items-center gap-2">
                         <Filter className="h-3.5 w-3.5 text-accent" /> Categories
                       </h3>
-                      {activeCat && <button onClick={() => setActiveCat(null)} className="text-[11px] text-accent hover:underline">Clear</button>}
+                      {activeCat && (
+                        <button
+                          onClick={() => setActiveCat(null)}
+                          className="text-[11px] text-accent hover:underline"
+                        >
+                          Clear
+                        </button>
+                      )}
                     </div>
                     <div className="space-y-1.5">
-                      <button onClick={() => setActiveCat(null)}
+                      <button
+                        onClick={() => setActiveCat(null)}
                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${
-                          !activeCat ? "bg-[var(--surface-strong-1)] border border-[var(--surface-border-strong)] text-fg-strong" : "border border-transparent hover:bg-[var(--surface-1)] text-fg-soft"
-                        }`}>
-                        <span className="grid place-items-center h-8 w-8 rounded-lg bg-[var(--surface-1)]"><Sparkles className="h-4 w-4" /></span>
+                          !activeCat
+                            ? "bg-[var(--surface-strong-1)] border border-[var(--surface-border-strong)] text-fg-strong"
+                            : "border border-transparent hover:bg-[var(--surface-1)] text-fg-soft"
+                        }`}
+                      >
+                        <span className="grid place-items-center h-8 w-8 rounded-lg bg-[var(--surface-1)]">
+                          <Sparkles className="h-4 w-4" />
+                        </span>
                         <span className="flex-1 text-sm font-medium">All Tools</span>
-                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface-strong-1)] text-fg-mute">{TOOLS.length}</span>
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface-strong-1)] text-fg-mute">
+                          {TOOLS.length}
+                        </span>
                       </button>
-                      {CATEGORIES.map(c => (
-                        <CategoryPill key={c.key} cat={c.key} active={activeCat === c.key} count={counts.get(c.key) || 0} onClick={() => setActiveCat(activeCat === c.key ? null : c.key)} />
+                      {CATEGORIES.map((c) => (
+                        <CategoryPill
+                          key={c.key}
+                          cat={c.key}
+                          active={activeCat === c.key}
+                          count={counts.get(c.key) || 0}
+                          onClick={() => setActiveCat(activeCat === c.key ? null : c.key)}
+                        />
                       ))}
                     </div>
                   </div>
                   <div className="border-t border-[var(--surface-border)] pt-4">
                     <div className="flex items-center justify-between mb-3 px-1">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-fg-strong">Capabilities</h3>
-                      {activeTags.length > 0 && <button onClick={() => setActiveTags([])} className="text-[11px] text-accent hover:underline">Clear</button>}
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-fg-strong">
+                        Capabilities
+                      </h3>
+                      {activeTags.length > 0 && (
+                        <button
+                          onClick={() => setActiveTags([])}
+                          className="text-[11px] text-accent hover:underline"
+                        >
+                          Clear
+                        </button>
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {TAGS.map(t => <TagPill key={t} tag={t} active={activeTags.includes(t)} onClick={() => toggleTag(t)} />)}
+                      {TAGS.map((t) => (
+                        <TagPill
+                          key={t}
+                          tag={t}
+                          active={activeTags.includes(t)}
+                          onClick={() => toggleTag(t)}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1073,12 +1629,16 @@ export function AIDiscoveryApp() {
               <section>
                 <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
                   <p className="text-sm text-fg-soft">
-                    Showing <span className="text-fg-strong font-semibold">{filtered.length}</span> of {TOOLS.length} tools
+                    Showing <span className="text-fg-strong font-semibold">{filtered.length}</span>{" "}
+                    of {TOOLS.length} tools
                     {activeCat && <span className="ml-2 text-accent">· {activeCat}</span>}
                     {activeDept && <span className="ml-2 text-accent">· {activeDept}</span>}
                   </p>
                   {compare.length > 0 && (
-                    <button onClick={() => setPage("compare")} className="text-xs font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground hover:brightness-110">
+                    <button
+                      onClick={() => setPage("compare")}
+                      className="text-xs font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary text-primary-foreground hover:brightness-110"
+                    >
                       <GitCompare className="h-3.5 w-3.5" /> Compare {compare.length}
                     </button>
                   )}
@@ -1086,15 +1646,26 @@ export function AIDiscoveryApp() {
                 {filtered.length === 0 ? (
                   <div className="glass rounded-2xl p-12 text-center">
                     <p className="text-fg-soft">No tools match your filters.</p>
-                    <button onClick={() => { setQuery(""); setActiveCat(null); setActiveTags([]); setActiveDept(null); }} className="mt-3 text-sm text-accent hover:underline">Reset filters</button>
+                    <button
+                      onClick={() => {
+                        setQuery("");
+                        setActiveCat(null);
+                        setActiveTags([]);
+                        setActiveDept(null);
+                      }}
+                      className="mt-3 text-sm text-accent hover:underline"
+                    >
+                      Reset filters
+                    </button>
                   </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {filtered.map(t => (
+                    {filtered.map((t) => (
                       <ToolCard
-                        key={t.id} tool={t}
+                        key={t.id}
+                        tool={t}
                         inStack={stack.includes(t.id)}
-                        onAdd={() => stackOpen ? addToStack(t.id) : toggleStack(t.id)}
+                        onAdd={() => (stackOpen ? addToStack(t.id) : toggleStack(t.id))}
                         onOpen={() => setOpenTool(t)}
                         showCompare
                         compareSelected={compare.includes(t.id)}
@@ -1114,25 +1685,51 @@ export function AIDiscoveryApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid sm:grid-cols-[minmax(0,1fr)_auto] gap-4 items-center">
           <div>
             <p className="text-sm font-bold text-fg-strong">AI Discovery Channel</p>
-            <p className="text-xs text-fg-mute mt-1">A curated enterprise AI directory · Powered by <span className="text-accent font-semibold">eSTUDY South Africa</span></p>
-            <p className="text-xs text-fg-soft mt-2 font-medium">Created by the <span className="text-accent font-semibold">AI Think Tank</span> for eSTUDY South Africa</p>
+            <p className="text-xs text-fg-mute mt-1">
+              A curated enterprise AI directory · Powered by{" "}
+              <span className="text-accent font-semibold">eSTUDY South Africa</span>
+            </p>
+            <p className="text-xs text-fg-soft mt-2 font-medium">
+              Created by the <span className="text-accent font-semibold">AI Think Tank</span> for
+              eSTUDY South Africa
+            </p>
           </div>
-          <p className="text-[11px] text-fg-mute uppercase tracking-wider">© {new Date().getFullYear()} eSTUDY · All rights reserved</p>
+          <p className="text-[11px] text-fg-mute uppercase tracking-wider">
+            © {new Date().getFullYear()} eSTUDY · All rights reserved
+          </p>
         </div>
       </footer>
 
       {/* Overlays */}
       {openTool && (
-        <ToolModal tool={openTool} inStack={stack.includes(openTool.id)} onToggle={() => toggleStack(openTool.id)} onClose={() => setOpenTool(null)} />
+        <ToolModal
+          tool={openTool}
+          inStack={stack.includes(openTool.id)}
+          onToggle={() => toggleStack(openTool.id)}
+          onClose={() => setOpenTool(null)}
+        />
       )}
       {stackOpen && (
         <>
-          <div className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm" onClick={() => setStackOpen(false)} />
-          <StackPanel stack={stack} tools={TOOLS} onRemove={id => setStack(s => s.filter(x => x !== id))} onClear={() => setStack([])} onClose={() => setStackOpen(false)} />
+          <div
+            className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"
+            onClick={() => setStackOpen(false)}
+          />
+          <StackPanel
+            stack={stack}
+            tools={TOOLS}
+            onRemove={(id) => setStack((s) => s.filter((x) => x !== id))}
+            onClear={() => setStack([])}
+            onClose={() => setStackOpen(false)}
+          />
         </>
       )}
 
-      <Chatbot onOpenTool={t => { setOpenTool(t); }} />
+      <Chatbot
+        onOpenTool={(t) => {
+          setOpenTool(t);
+        }}
+      />
     </div>
   );
 }
