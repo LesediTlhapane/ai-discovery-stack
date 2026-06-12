@@ -1,24 +1,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Search, Sparkles, Filter, X, Plus, Check, Download, ExternalLink,
-  Brain, Code2, Telescope, Palette, Clapperboard, Workflow, Menu, Zap, Layers,
+  GraduationCap, Briefcase, Megaphone, Handshake, Languages, Calculator,
+  Presentation, Box, ShieldCheck, Menu, Zap, Layers,
   Sun, Moon, Home as HomeIcon, Info, GitCompare, Mail, Building2, TrendingUp,
-  MessageCircle, Send, Bot, Trash2, Star,
+  MessageCircle, Send, Bot, Trash2, Star, Newspaper, ThumbsUp, MessageSquare, Share2, Rocket,
 } from "lucide-react";
 import {
-  CATEGORIES, TAGS, TOOLS, DEPARTMENTS, ENTERPRISE_HIGHLIGHTS, TRENDING, logoUrl,
+  CATEGORIES, TAGS, TOOLS, DEPARTMENTS, ENTERPRISE_HIGHLIGHTS, TRENDING, FEED_POSTS, logoUrl,
   type Tool, type Category, type Tag, type Department,
 } from "@/lib/tools-data";
 
-type Page = "home" | "about" | "compare" | "contact";
+type Page = "home" | "about" | "compare" | "trends" | "contact";
 
 const CAT_ICONS: Record<Category, React.ComponentType<{ className?: string }>> = {
-  "LLMs & Text": Brain,
-  "Coding & Dev": Code2,
-  "Search & Research": Telescope,
-  "Visual & Image": Palette,
-  "Video, Audio & Avatar": Clapperboard,
-  "Productivity & Automation": Workflow,
+  "Education & Learning Tools": GraduationCap,
+  "Business & Strategy Tools": Briefcase,
+  "Marketing & SEO Tools": Megaphone,
+  "Sales & CRM Tools": Handshake,
+  "Translation & Language Processing": Languages,
+  "Finance & Accounting Tools": Calculator,
+  "Presentation & Document Generation": Presentation,
+  "3D Modeling & Game Development": Box,
+  "Security, Privacy & Compliance Tools": ShieldCheck,
 };
 
 function initials(name: string) {
@@ -95,7 +99,7 @@ function CategoryPill({ cat, active, count, onClick }: { cat: Category; active: 
       <span className={`grid place-items-center h-8 w-8 rounded-lg ${active ? "bg-accent text-accent-foreground" : "bg-[var(--surface-1)] text-fg-soft group-hover:bg-[var(--surface-strong-1)]"}`}>
         <Icon className="h-4 w-4" />
       </span>
-      <span className="flex-1 text-sm font-medium leading-tight">{CATEGORIES.find(c => c.key === cat)?.label}</span>
+      <span className="flex-1 text-sm font-medium leading-tight">{cat}</span>
       <span className={`text-[11px] px-2 py-0.5 rounded-full ${active ? "bg-accent text-accent-foreground" : "bg-[var(--surface-strong-1)] text-fg-mute"}`}>{count}</span>
     </button>
   );
@@ -107,6 +111,7 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
   compareSelected?: boolean; onToggleCompare?: () => void; showCompare?: boolean;
 }) {
   const highlight = ENTERPRISE_HIGHLIGHTS.has(tool.name);
+  const primary = tool.categories[0];
   return (
     <div className="group relative glass rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_20px_50px_-20px_rgba(69,204,66,0.35)] animate-fade-in-up">
       {highlight && (
@@ -134,7 +139,8 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
               )}
               <button
                 onClick={onAdd}
-                aria-label="Add to stack"
+                aria-label={inStack ? "Remove from stack" : "Add to stack"}
+                title={inStack ? "In your stack" : "Add to My Stack"}
                 className={`shrink-0 grid place-items-center h-7 w-7 rounded-lg transition-all ${
                   inStack ? "bg-accent text-accent-foreground" : "bg-[var(--surface-1)] text-fg-soft hover:bg-accent hover:text-accent-foreground"
                 }`}
@@ -147,13 +153,16 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
         </div>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-3 flex flex-wrap gap-1.5">
         <span className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-md bg-accent/15 text-accent border border-accent/30">
-          {tool.category}
+          {primary}
         </span>
+        {tool.categories.slice(1, 2).map(c => (
+          <span key={c} className="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-md bg-[var(--surface-1)] text-fg-soft border border-[var(--surface-border)]">{c}</span>
+        ))}
       </div>
 
-      <p className="mt-3 text-sm text-fg-soft leading-relaxed line-clamp-3">{tool.field}</p>
+      <p className="mt-3 text-sm text-fg-soft leading-relaxed line-clamp-3">{tool.summary}</p>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
         {tool.tags.map(t => (
@@ -173,12 +182,18 @@ function ToolCard({ tool, inStack, onAdd, onOpen, compareSelected, onToggleCompa
 
 /* ---------- Modal ---------- */
 function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: () => void; inStack: boolean; onToggle: () => void }) {
-  const Icon = CAT_ICONS[tool.category];
+  const primary = tool.categories[0];
+  const Icon = CAT_ICONS[primary];
   const highlight = ENTERPRISE_HIGHLIGHTS.has(tool.name);
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, []);
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center p-4 animate-fade-in-up" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-      <div onClick={e => e.stopPropagation()} className="relative glass-strong rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-7">
+    <div className="fixed inset-0 z-[60] grid place-items-center p-4 animate-fade-in-up" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
+      <div onClick={e => e.stopPropagation()} className="relative glass-strong rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-7 ring-1 ring-accent/20 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)]">
         <button onClick={onClose} aria-label="Close" className="absolute top-4 right-4 grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong">
           <X className="h-4 w-4" />
         </button>
@@ -190,23 +205,37 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
             {tool.vendor && <p className="text-sm text-fg-mute">by {tool.vendor}</p>}
             <div className="mt-2 flex flex-wrap gap-2 items-center">
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-accent/15 text-accent border border-accent/30">
-                <Icon className="h-3.5 w-3.5" /> {tool.category}
+                <Icon className="h-3.5 w-3.5" /> {primary}
               </span>
-              {tool.tags.map(t => (
-                <span key={t} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft">{t}</span>
+              {tool.categories.slice(1).map(c => (
+                <span key={c} className="text-[11px] px-2 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft">{c}</span>
               ))}
             </div>
           </div>
         </div>
 
         <div className="mt-6 space-y-5">
-          <section>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Field of expertise</h3>
-            <p className="text-fg-soft leading-relaxed">{tool.field}</p>
+          <section className="rounded-2xl p-5 bg-[var(--surface-1)]/60 border border-[var(--surface-border)]">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Summary</h3>
+            <p className="text-fg-strong leading-relaxed">{tool.summary}</p>
           </section>
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Key benefits</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Primary operational benefits</h3>
             <p className="text-fg-soft leading-relaxed">{tool.benefits}</p>
+          </section>
+          <section className="rounded-2xl p-5 bg-gradient-to-br from-primary/15 to-transparent border border-primary/30">
+            <h3 className="text-sm font-semibold text-fg-strong flex items-center gap-2 mb-2">
+              <Rocket className="h-4 w-4 text-accent" /> Best Used For
+            </h3>
+            <p className="text-fg-soft leading-relaxed">{tool.bestFor}</p>
+          </section>
+          <section>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">Capability tags</h3>
+            <div className="flex flex-wrap gap-2">
+              {tool.tags.map(t => (
+                <span key={t} className="text-[11px] px-2 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft">{t}</span>
+              ))}
+            </div>
           </section>
           {tool.departments.length > 0 && (
             <section>
@@ -221,26 +250,33 @@ function ToolModal({ tool, onClose, inStack, onToggle }: { tool: Tool; onClose: 
           {highlight && (
             <section className="rounded-2xl p-5 bg-gradient-to-br from-accent/15 to-transparent border border-accent/30">
               <h3 className="text-sm font-semibold text-fg-strong flex items-center gap-2 mb-2">
-                <Zap className="h-4 w-4 text-accent" /> Why it's a best fit for enterprise automation
+                <Zap className="h-4 w-4 text-accent" /> Why it's an enterprise pick
               </h3>
               <p className="text-sm text-fg-soft leading-relaxed">
-                {tool.name} sits at the intersection of orchestration, intelligence, and reliability — built to plug into existing
-                corporate ecosystems, scale across teams, and remove the manual friction in high-volume workflows.
+                {tool.name} sits at the intersection of orchestration, intelligence and reliability — built to plug into existing
+                corporate ecosystems, scale across teams and remove manual friction in high-volume workflows.
               </p>
             </section>
           )}
         </div>
 
-        <div className="mt-7 flex gap-3">
+        <div className="mt-7 flex flex-col sm:flex-row gap-3">
+          <a
+            href={tool.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 py-3 rounded-xl font-bold text-center bg-gradient-to-r from-accent to-emerald-400 text-accent-foreground hover:brightness-110 transition-all shadow-[0_15px_40px_-10px_rgba(69,204,66,0.7)] flex items-center justify-center gap-2"
+          >
+            <ExternalLink className="h-4 w-4" /> Launch {tool.name}
+          </a>
           <button
             onClick={onToggle}
-            className={`flex-1 py-2.5 rounded-xl font-semibold transition-all ${
-              inStack ? "bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong hover:bg-[var(--surface-strong-1)]" : "bg-accent text-accent-foreground hover:brightness-110 shadow-[0_10px_30px_-10px_rgba(69,204,66,0.6)]"
+            className={`py-3 px-5 rounded-xl font-semibold transition-all ${
+              inStack ? "bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong hover:bg-[var(--surface-strong-1)]" : "bg-[#052b66] text-white hover:brightness-125"
             }`}
           >
-            {inStack ? "Remove from My Stack" : "Add to My Stack"}
+            {inStack ? "✓ In My Stack" : "+ Add to My Stack"}
           </button>
-          <button onClick={onClose} className="px-5 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border-strong)] text-fg-strong hover:bg-[var(--surface-strong-1)]">Close</button>
         </div>
       </div>
     </div>
@@ -257,7 +293,7 @@ function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
       "MY AUTOMATION STACK",
       "AI Discovery Channel — Powered by eSTUDY South Africa",
       "=".repeat(60), "",
-      ...selected.map((t, i) => `${i + 1}. ${t.name}${t.vendor ? ` (${t.vendor})` : ""}\n   Category: ${t.category}\n   Expertise: ${t.field}\n   Benefit: ${t.benefits}\n`),
+      ...selected.map((t, i) => `${i + 1}. ${t.name}${t.vendor ? ` (${t.vendor})` : ""}\n   Category: ${t.categories.join(", ")}\n   Summary: ${t.summary}\n   Benefit: ${t.benefits}\n   Best For: ${t.bestFor}\n   Link: ${t.url}\n`),
     ];
     const blob = new Blob([lines.join("\n")], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -277,12 +313,13 @@ function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
       .cat{display:inline-block;font-size:11px;background:#052b66;color:#fff;padding:2px 8px;border-radius:4px;margin-left:8px;text-transform:uppercase}
       .label{font-size:11px;color:#45cc42;font-weight:700;text-transform:uppercase;margin-top:8px}
       p{margin:4px 0;font-size:14px;line-height:1.5}
+      a{color:#052b66}
       footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;color:#666;font-size:12px;text-align:center}
     </style></head><body><h1>My Automation Stack</h1>
     <div class="sub">AI Discovery Channel · ${selected.length} tools curated</div>
-    ${selected.map(t => `<div class="tool"><div><span class="name">${t.name}</span>${t.vendor ? ` <span style="color:#666;font-size:13px">— ${t.vendor}</span>` : ""}<span class="cat">${t.category}</span></div>
-    <div class="label">Field of Expertise</div><p>${t.field}</p><div class="label">Key Benefits</div><p>${t.benefits}</p></div>`).join("")}
-    <footer>Powered by eSTUDY South Africa · AI Discovery Channel</footer>
+    ${selected.map(t => `<div class="tool"><div><span class="name">${t.name}</span>${t.vendor ? ` <span style="color:#666;font-size:13px">— ${t.vendor}</span>` : ""}<span class="cat">${t.categories[0]}</span></div>
+    <div class="label">Summary</div><p>${t.summary}</p><div class="label">Benefits</div><p>${t.benefits}</p><div class="label">Best For</div><p>${t.bestFor}</p><div class="label">Link</div><p><a href="${t.url}">${t.url}</a></p></div>`).join("")}
+    <footer>Created by the AI Think Tank for eSTUDY South Africa · AI Discovery Channel</footer>
     <script>window.onload=()=>window.print()</script></body></html>`);
     w.document.close();
   };
@@ -310,7 +347,7 @@ function StackPanel({ stack, tools, onRemove, onClear, onClose }: {
             <BrandLogo tool={t} size={40} />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-fg-strong truncate">{t.name}</p>
-              <p className="text-[11px] text-accent truncate">{t.category}</p>
+              <p className="text-[11px] text-accent truncate">{t.categories[0]}</p>
             </div>
             <button onClick={() => onRemove(t.id)} className="grid place-items-center h-7 w-7 rounded-lg bg-[var(--surface-1)] hover:bg-destructive/30 text-fg-soft"><X className="h-3.5 w-3.5" /></button>
           </div>
@@ -340,12 +377,11 @@ function recommendTools(input: string): Tool[] {
   const q = input.toLowerCase();
   const scored = TOOLS.map(t => {
     let s = 0;
-    const hay = `${t.name} ${t.category} ${t.field} ${t.benefits} ${t.tags.join(" ")} ${t.departments.join(" ")}`.toLowerCase();
+    const hay = `${t.name} ${t.categories.join(" ")} ${t.summary} ${t.benefits} ${t.bestFor} ${t.tags.join(" ")} ${t.departments.join(" ")}`.toLowerCase();
     q.split(/\s+/).filter(w => w.length > 2).forEach(w => {
       if (hay.includes(w)) s += 1;
       if (t.name.toLowerCase().includes(w)) s += 2;
     });
-    // keyword boosts
     const boosts: Array<[RegExp, string[]]> = [
       [/scrap|data\s*pipeline|extract/, ["Gumloop", "n8n"]],
       [/automat|workflow|orchestrat/, ["n8n", "Zapier Agents"]],
@@ -355,10 +391,14 @@ function recommendTools(input: string): Tool[] {
       [/code|develop|engineer|refactor/, ["Cursor", "GitHub Copilot", "Lovable"]],
       [/research|paper|study|literature/, ["NotebookLM", "Elicit", "Consensus", "Perplexity AI"]],
       [/meeting|transcrib|note/, ["Otter.ai", "Fireflies.ai"]],
-      [/slide|deck|presentation/, ["Gamma", "Beautiful.ai"]],
+      [/slide|deck|presentation/, ["Gamma", "Beautiful.ai", "Tome"]],
       [/copy|marketing|seo|content/, ["Jasper", "Copy.ai", "Clearscope", "Writer"]],
       [/chatbot|support|whatsapp/, ["Botpress"]],
-      [/finance|budget|cost|invoice/, ["DeepSeek", "Claude", "Amazon Q"]],
+      [/finance|budget|cost|invoice|account/, ["QuickBooks Advanced AI", "Xero Analytics", "Ramp"]],
+      [/crm|sales|pipeline|lead/, ["HubSpot AI", "Salesforce Einstein", "Gong.io"]],
+      [/translat|language|grammar/, ["DeepL Pro", "Grammarly Enterprise", "QuillBot"]],
+      [/3d|game|unity|unreal/, ["Spline 3D", "Unity Muse", "Unreal Engine Sky"]],
+      [/security|privacy|compliance|popia|gdpr/, ["OneTrust", "Darktrace", "Snyk"]],
       [/legal|long\s*document|analy/, ["Claude"]],
     ];
     boosts.forEach(([re, names]) => { if (re.test(q) && names.includes(t.name)) s += 5; });
@@ -429,7 +469,7 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-fg-strong">eSTUDY AI Concierge</p>
-              <p className="text-[11px] text-fg-mute">Recommends tools from 50+ database</p>
+              <p className="text-[11px] text-fg-mute">Recommends from 70+ tools</p>
             </div>
             <button onClick={() => { setMsgs(m => m.slice(0, 1)); setRecsByMsg({}); }} className="grid place-items-center h-8 w-8 rounded-lg bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-soft" title="Reset">
               <Trash2 className="h-3.5 w-3.5" />
@@ -451,7 +491,7 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
                           <BrandLogo tool={t} size={32} />
                           <div className="min-w-0 flex-1">
                             <p className="text-xs font-semibold text-fg-strong truncate">{t.name}</p>
-                            <p className="text-[10px] text-fg-mute truncate">{t.category}</p>
+                            <p className="text-[10px] text-fg-mute truncate">{t.categories[0]}</p>
                           </div>
                           <ExternalLink className="h-3 w-3 text-accent" />
                         </button>
@@ -521,6 +561,77 @@ function AboutPage() {
   );
 }
 
+/* ---------- Trends Page (LinkedIn-style feed) ---------- */
+function TrendsPage() {
+  const topics = useMemo(() => Array.from(new Set(FEED_POSTS.map(p => p.topic))), []);
+  const [topic, setTopic] = useState<string | null>(null);
+  const posts = topic ? FEED_POSTS.filter(p => p.topic === topic) : FEED_POSTS;
+
+  return (
+    <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-4">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> LIVE FEED
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-black"><span className="text-fg-strong">AI Trends </span><span className="text-gradient">Hub</span></h1>
+        <p className="mt-3 text-fg-soft max-w-xl mx-auto">A professional feed of AI corporate trends, new tools and digital transformation news.</p>
+      </div>
+
+      <div className="glass-strong rounded-2xl p-3 mb-5 flex flex-wrap gap-1.5 sticky top-[72px] z-20">
+        <button onClick={() => setTopic(null)} className={`text-xs px-3 py-1.5 rounded-full border ${!topic ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"}`}>All Topics</button>
+        {topics.map(t => (
+          <button key={t} onClick={() => setTopic(topic === t ? null : t)} className={`text-xs px-3 py-1.5 rounded-full border ${topic === t ? "bg-primary text-primary-foreground border-primary" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"}`}>{t}</button>
+        ))}
+      </div>
+
+      <div className="space-y-4">
+        {posts.map(p => (
+          <FeedCard key={p.id} post={p} />
+        ))}
+      </div>
+    </main>
+  );
+}
+
+function FeedCard({ post }: { post: { id: number; author: string; role: string; org: string; time: string; body: string; topic: string; reactions: number; comments: number } }) {
+  const [liked, setLiked] = useState(false);
+  const init = post.author.split(" ").slice(0, 2).map(s => s[0]).join("").toUpperCase();
+  return (
+    <article className="glass rounded-2xl p-5 hover:border-accent/30 transition-all">
+      <header className="flex items-start gap-3">
+        <div className="grid place-items-center h-12 w-12 rounded-full bg-gradient-to-br from-[#052b66] to-[#1a4ba0] text-white font-bold border-2 border-accent/30">
+          {init}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold text-fg-strong truncate">{post.author}</p>
+          <p className="text-xs text-fg-soft truncate">{post.role} · {post.org}</p>
+          <p className="text-[11px] text-fg-mute mt-0.5">{post.time} · 🌐</p>
+        </div>
+        <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-accent/15 text-accent border border-accent/30 shrink-0">{post.topic}</span>
+      </header>
+      <p className="mt-4 text-fg-strong leading-relaxed whitespace-pre-line">{post.body}</p>
+      <div className="mt-4 flex items-center justify-between text-xs text-fg-mute pb-2 border-b border-[var(--surface-border)]">
+        <span className="flex items-center gap-1">
+          <span className="grid place-items-center h-4 w-4 rounded-full bg-accent text-accent-foreground"><ThumbsUp className="h-2.5 w-2.5" /></span>
+          {post.reactions + (liked ? 1 : 0)}
+        </span>
+        <span>{post.comments} comments</span>
+      </div>
+      <div className="mt-2 grid grid-cols-3 gap-1">
+        <button onClick={() => setLiked(l => !l)} className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${liked ? "text-accent bg-accent/10" : "text-fg-soft hover:bg-[var(--surface-1)]"}`}>
+          <ThumbsUp className="h-3.5 w-3.5" /> Like
+        </button>
+        <button className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all">
+          <MessageSquare className="h-3.5 w-3.5" /> Comment
+        </button>
+        <button className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all">
+          <Share2 className="h-3.5 w-3.5" /> Share
+        </button>
+      </div>
+    </article>
+  );
+}
+
 /* ---------- Compare Page ---------- */
 function ComparePage({ tools, compare, onToggle, onClear }: {
   tools: Tool[]; compare: number[]; onToggle: (id: number) => void; onClear: () => void;
@@ -579,9 +690,10 @@ function ComparePage({ tools, compare, onToggle, onClear }: {
             ))}
 
             {[
-              ["Category", (t: Tool) => t.category],
-              ["Field of Expertise", (t: Tool) => t.field],
-              ["Key Benefits", (t: Tool) => t.benefits],
+              ["Categories", (t: Tool) => t.categories.join(" · ")],
+              ["Summary", (t: Tool) => t.summary],
+              ["Benefits", (t: Tool) => t.benefits],
+              ["Best Used For", (t: Tool) => t.bestFor],
               ["Tags", (t: Tool) => t.tags.join(" · ")],
               ["Departments", (t: Tool) => t.departments.join(", ") || "—"],
               ["Enterprise Pick", (t: Tool) => ENTERPRISE_HIGHLIGHTS.has(t.name) ? "★ Yes" : "—"],
@@ -607,26 +719,41 @@ function FieldRow({ label, selected, render }: { label: string; selected: Tool[]
 }
 
 /* ---------- Contact Page ---------- */
+const CONTACT_EMAILS = ["lesedi@estudysa.co.za", "Katlego.m@estudysa.co.za"];
+
 function ContactPage() {
   const [form, setForm] = useState({ name: "", dept: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Simulate dispatch to both eSTUDY organizational inboxes
+    const subject = encodeURIComponent(`[AI Discovery Channel] ${form.subject || "Inquiry"}`);
+    const body = encodeURIComponent(
+      `New message from the AI Discovery Channel\n\n` +
+      `Name: ${form.name}\n` +
+      `Department: ${form.dept}\n` +
+      `Email: ${form.email}\n\n` +
+      `Message:\n${form.message}\n\n` +
+      `— Dispatched to: ${CONTACT_EMAILS.join(", ")}`
+    );
+    const mailto = `mailto:${CONTACT_EMAILS.join(",")}?subject=${subject}&body=${body}`;
+    // Open user's mail client with both recipients pre-filled
+    window.location.href = mailto;
     setSent(true);
-    setTimeout(() => setSent(false), 5000);
+    setTimeout(() => setSent(false), 6000);
     setForm({ name: "", dept: "", email: "", subject: "", message: "" });
   };
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
       <div className="text-center mb-10">
         <h1 className="text-4xl sm:text-5xl font-black"><span className="text-fg-strong">Get in </span><span className="text-gradient">touch</span></h1>
-        <p className="mt-3 text-fg-soft max-w-xl mx-auto">Report a platform issue or request a new tool addition. We respond within one business day.</p>
+        <p className="mt-3 text-fg-soft max-w-xl mx-auto">Report a platform issue or request a new tool addition. Messages route directly to <span className="text-accent font-semibold">{CONTACT_EMAILS.join(" & ")}</span>.</p>
       </div>
 
       <form onSubmit={submit} className="glass-strong rounded-3xl p-7 space-y-4">
         {sent && (
           <div className="rounded-xl bg-accent/15 border border-accent/40 p-3 text-sm text-fg-strong flex items-center gap-2">
-            <Check className="h-4 w-4 text-accent" /> Message captured — the eSTUDY ops team will reply shortly.
+            <Check className="h-4 w-4 text-accent" /> Message dispatched to the eSTUDY ops team — we'll reply shortly.
           </div>
         )}
         <div className="grid sm:grid-cols-2 gap-4">
@@ -647,6 +774,7 @@ function ContactPage() {
         <button type="submit" className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-bold hover:brightness-110 transition-all flex items-center justify-center gap-2">
           <Send className="h-4 w-4" /> Send message
         </button>
+        <p className="text-[11px] text-fg-mute text-center">Your message is routed to <span className="font-semibold">{CONTACT_EMAILS[0]}</span> and <span className="font-semibold">{CONTACT_EMAILS[1]}</span>.</p>
       </form>
     </main>
   );
@@ -682,20 +810,21 @@ function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilt
 }) {
   const nav: { key: Page; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { key: "home", label: "Home", icon: HomeIcon },
+    { key: "trends", label: "Trends", icon: Newspaper },
     { key: "compare", label: "Compare", icon: GitCompare },
     { key: "about", label: "About", icon: Info },
     { key: "contact", label: "Contact", icon: Mail },
   ];
   return (
-    <header className="sticky top-0 z-30 glass-strong border-b border-[var(--surface-border)]">
+    <header className="sticky top-0 z-50 bg-[#052b66] border-b border-[#0a3d8a] shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
         <button onClick={() => setPage("home")} className="flex items-center gap-3 min-w-0 shrink-0">
           <div className="grid place-items-center h-9 w-9 rounded-xl bg-gradient-to-br from-accent to-emerald-400 text-accent-foreground shadow-[0_0_20px_rgba(69,204,66,0.4)]">
             <Sparkles className="h-4 w-4" />
           </div>
           <div className="min-w-0 text-left hidden sm:block">
-            <p className="text-sm font-bold text-fg-strong truncate">AI Discovery Channel</p>
-            <p className="text-[10px] text-fg-mute uppercase tracking-wider truncate">Powered by eSTUDY South Africa</p>
+            <p className="text-sm font-bold text-white truncate">AI Discovery Channel</p>
+            <p className="text-[10px] text-white/60 tracking-wider truncate">POWERED BY eSTUDY SOUTH AFRICA</p>
           </div>
         </button>
 
@@ -703,7 +832,7 @@ function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilt
           {nav.map(n => (
             <button key={n.key} onClick={() => setPage(n.key)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                page === n.key ? "bg-accent/15 text-accent border border-accent/30" : "text-fg-soft hover:text-fg-strong hover:bg-[var(--surface-1)]"
+                page === n.key ? "bg-accent text-accent-foreground shadow-[0_4px_15px_rgba(69,204,66,0.4)]" : "text-white/75 hover:text-white hover:bg-white/10"
               }`}>
               <n.icon className="h-3.5 w-3.5" /> {n.label}
             </button>
@@ -714,11 +843,11 @@ function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilt
 
         <div className="flex items-center gap-2 shrink-0">
           <button onClick={toggleTheme} aria-label="Toggle theme"
-            className="grid place-items-center h-10 w-10 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong hover:bg-[var(--surface-strong-1)] hover:scale-105 transition-all">
+            className="grid place-items-center h-10 w-10 rounded-xl bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:scale-105 transition-all">
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           {page === "home" && (
-            <button onClick={onFilters} className="lg:hidden grid place-items-center h-10 w-10 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong hover:bg-[var(--surface-strong-1)]" aria-label="Filters">
+            <button onClick={onFilters} className="lg:hidden grid place-items-center h-10 w-10 rounded-xl bg-white/10 border border-white/10 text-white hover:bg-white/20" aria-label="Filters">
               <Menu className="h-4 w-4" />
             </button>
           )}
@@ -730,11 +859,11 @@ function Header({ page, setPage, theme, toggleTheme, stackCount, onStack, onFilt
         </div>
       </div>
 
-      <nav className="md:hidden border-t border-[var(--surface-border)] px-2 py-2 flex items-center justify-around">
+      <nav className="md:hidden border-t border-white/10 px-2 py-2 flex items-center justify-around bg-[#041f4a]">
         {nav.map(n => (
           <button key={n.key} onClick={() => setPage(n.key)}
-            className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg text-[11px] transition-all ${
-              page === n.key ? "text-accent" : "text-fg-soft"
+            className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-[11px] transition-all ${
+              page === n.key ? "text-accent" : "text-white/60"
             }`}>
             <n.icon className="h-4 w-4" /> {n.label}
           </button>
@@ -761,16 +890,17 @@ export function AIDiscoveryApp() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return TOOLS.filter(t => {
-      if (activeCat && t.category !== activeCat) return false;
+      if (activeCat && !t.categories.includes(activeCat)) return false;
       if (activeDept && !t.departments.includes(activeDept)) return false;
       if (activeTags.length && !activeTags.every(tag => t.tags.includes(tag))) return false;
       if (!q) return true;
       return (
         t.name.toLowerCase().includes(q) ||
         t.vendor?.toLowerCase().includes(q) ||
-        t.field.toLowerCase().includes(q) ||
+        t.summary.toLowerCase().includes(q) ||
         t.benefits.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q)
+        t.bestFor.toLowerCase().includes(q) ||
+        t.categories.some(c => c.toLowerCase().includes(q))
       );
     });
   }, [query, activeCat, activeTags, activeDept]);
@@ -778,12 +908,13 @@ export function AIDiscoveryApp() {
   const counts = useMemo(() => {
     const m = new Map<Category, number>();
     CATEGORIES.forEach(c => m.set(c.key, 0));
-    TOOLS.forEach(t => m.set(t.category, (m.get(t.category) || 0) + 1));
+    TOOLS.forEach(t => t.categories.forEach(c => m.set(c, (m.get(c) || 0) + 1)));
     return m;
   }, []);
 
   const trending = useMemo(() => TRENDING.map(n => TOOLS.find(t => t.name === n)).filter(Boolean) as Tool[], []);
 
+  const addToStack = (id: number) => setStack(s => (s.includes(id) ? s : [...s, id]));
   const toggleStack = (id: number) => setStack(s => (s.includes(id) ? s.filter(x => x !== id) : [...s, id]));
   const toggleTag = (tag: Tag) => setActiveTags(s => (s.includes(tag) ? s.filter(t => t !== tag) : [...s, tag]));
   const toggleCompare = (id: number) => setCompare(s => (s.includes(id) ? s.filter(x => x !== id) : s.length >= 4 ? s : [...s, id]));
@@ -799,6 +930,7 @@ export function AIDiscoveryApp() {
       />
 
       {page === "about" && <AboutPage />}
+      {page === "trends" && <TrendsPage />}
       {page === "contact" && <ContactPage />}
       {page === "compare" && (
         <ComparePage tools={TOOLS} compare={compare} onToggle={toggleCompare} onClear={() => setCompare([])} />
@@ -818,7 +950,7 @@ export function AIDiscoveryApp() {
                 <span className="text-gradient">Channel</span>
               </h1>
               <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-fg-soft leading-relaxed">
-                eSTUDY South Africa's expert directory of 50+ enterprise-grade AI tools — engineered to help your teams
+                eSTUDY South Africa's expert directory of 70+ enterprise-grade AI tools — engineered to help your teams
                 discover, compare, and assemble the perfect automation stack.
               </p>
 
@@ -840,8 +972,8 @@ export function AIDiscoveryApp() {
 
               <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-6 max-w-2xl mx-auto">
                 {[
-                  { value: "50", label: "Curated Tools" },
-                  { value: "6", label: "Core Functions" },
+                  { value: TOOLS.length, label: "Curated Tools" },
+                  { value: CATEGORIES.length, label: "Business Dimensions" },
                   { value: filtered.length, label: "Matching Now" },
                 ].map(s => (
                   <div key={s.label} className="glass rounded-2xl p-4 sm:p-5">
@@ -868,11 +1000,11 @@ export function AIDiscoveryApp() {
                     <BrandLogo tool={t} size={44} />
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold text-fg-strong truncate">{t.name}</p>
-                      <p className="text-[11px] text-accent truncate">{t.category}</p>
+                      <p className="text-[11px] text-accent truncate">{t.categories[0]}</p>
                     </div>
                     <Star className="h-3.5 w-3.5 text-accent fill-accent" />
                   </div>
-                  <p className="mt-2 text-xs text-fg-soft line-clamp-2">{t.field}</p>
+                  <p className="mt-2 text-xs text-fg-soft line-clamp-2">{t.summary}</p>
                 </button>
               ))}
             </div>
@@ -902,7 +1034,7 @@ export function AIDiscoveryApp() {
 
           {/* Main grid */}
           <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-            <div className="grid lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
+            <div className="grid lg:grid-cols-[300px_minmax(0,1fr)] gap-6">
               <aside className={`${filtersOpen ? "block" : "hidden"} lg:block lg:sticky lg:top-[88px] lg:self-start`}>
                 <div className="glass-strong rounded-2xl p-4 space-y-5">
                   <div>
@@ -962,7 +1094,7 @@ export function AIDiscoveryApp() {
                       <ToolCard
                         key={t.id} tool={t}
                         inStack={stack.includes(t.id)}
-                        onAdd={() => toggleStack(t.id)}
+                        onAdd={() => stackOpen ? addToStack(t.id) : toggleStack(t.id)}
                         onOpen={() => setOpenTool(t)}
                         showCompare
                         compareSelected={compare.includes(t.id)}
@@ -983,6 +1115,7 @@ export function AIDiscoveryApp() {
           <div>
             <p className="text-sm font-bold text-fg-strong">AI Discovery Channel</p>
             <p className="text-xs text-fg-mute mt-1">A curated enterprise AI directory · Powered by <span className="text-accent font-semibold">eSTUDY South Africa</span></p>
+            <p className="text-xs text-fg-soft mt-2 font-medium">Created by the <span className="text-accent font-semibold">AI Think Tank</span> for eSTUDY South Africa</p>
           </div>
           <p className="text-[11px] text-fg-mute uppercase tracking-wider">© {new Date().getFullYear()} eSTUDY · All rights reserved</p>
         </div>
