@@ -45,6 +45,7 @@ import {
   Video,
   GitBranch,
   Copy,
+  ArrowLeft,
   Check as CheckIcon,
 } from "lucide-react";
 import {
@@ -62,7 +63,7 @@ import {
   type Department,
 } from "@/lib/tools-data";
 
-type Page = "home" | "about" | "compare" | "trends" | "contact";
+type Page = "home" | "about" | "compare" | "trends" | "contact" | "stack";
 
 const CAT_ICONS: Record<Category, React.ComponentType<{ className?: string }>> = {
   "Education & Learning Tools": GraduationCap,
@@ -319,12 +320,12 @@ function ToolModal({
       
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative glass-strong rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-7 ring-1 ring-accent/20 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)] z-[61]"
+        className="relative glass-strong rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-y-auto p-7 ring-1 ring-accent/20 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)] z-[61] scrollbar-thin scrollbar-thumb-accent/30 scrollbar-track-transparent"
       >
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong"
+          className="absolute top-4 right-4 grid place-items-center h-9 w-9 rounded-full bg-[var(--surface-1)] hover:bg-[var(--surface-strong-1)] text-fg-strong z-10"
         >
           <X className="h-4 w-4" />
         </button>
@@ -350,25 +351,151 @@ function ToolModal({
           </div>
         </div>
 
-        <div className="mt-6 space-y-5">
+        <div className="mt-6 space-y-5 max-h-[60vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-accent/30 scrollbar-track-transparent">
+          {/* Summary */}
           <section className="rounded-2xl p-5 bg-[var(--surface-1)]/60 border border-[var(--surface-border)]">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
               Summary
             </h3>
             <p className="text-fg-strong leading-relaxed">{tool.summary}</p>
           </section>
+
+          {/* Benefits */}
           <section>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
               Primary operational benefits
             </h3>
             <p className="text-fg-soft leading-relaxed">{tool.benefits}</p>
           </section>
+
+          {/* Best For */}
           <section className="rounded-2xl p-5 bg-gradient-to-br from-primary/15 to-transparent border border-primary/30">
             <h3 className="text-sm font-semibold text-fg-strong flex items-center gap-2 mb-2">
               <Rocket className="h-4 w-4 text-accent" /> Best Used For
             </h3>
             <p className="text-fg-soft leading-relaxed">{tool.bestFor}</p>
           </section>
+
+          {/* Features */}
+          {tool.features && tool.features.length > 0 && (
+            <section>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                Key Features
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {tool.features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-2 text-sm text-fg-soft">
+                    <span className="text-accent mt-1">✦</span>
+                    <span>{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Strengths & Weaknesses */}
+          <div className="grid sm:grid-cols-2 gap-4">
+            {tool.strengths && tool.strengths.length > 0 && (
+              <section className="rounded-2xl p-4 bg-green-500/10 border border-green-500/30">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-green-400 mb-2">
+                  ✅ Strengths
+                </h3>
+                <ul className="space-y-1">
+                  {tool.strengths.slice(0, 5).map((strength, index) => (
+                    <li key={index} className="text-sm text-fg-soft flex items-start gap-2">
+                      <span className="text-green-400 mt-0.5">▸</span>
+                      <span>{strength}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {tool.weaknesses && tool.weaknesses.length > 0 && (
+              <section className="rounded-2xl p-4 bg-red-500/10 border border-red-500/30">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-red-400 mb-2">
+                  ⚠️ Weaknesses
+                </h3>
+                <ul className="space-y-1">
+                  {tool.weaknesses.slice(0, 5).map((weakness, index) => (
+                    <li key={index} className="text-sm text-fg-soft flex items-start gap-2">
+                      <span className="text-red-400 mt-0.5">▸</span>
+                      <span>{weakness}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
+
+          {/* Use Cases */}
+          {tool.useCases && tool.useCases.length > 0 && (
+            <section>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                Use Cases
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {tool.useCases.map((useCase, index) => (
+                  <span
+                    key={index}
+                    className="text-xs px-3 py-1 rounded-full bg-accent/15 border border-accent/30 text-accent"
+                  >
+                    {useCase}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Pricing */}
+          {tool.pricing && (
+            <section className="rounded-2xl p-4 bg-[var(--surface-1)]/60 border border-[var(--surface-border)]">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                💰 Pricing
+              </h3>
+              <p className="text-sm text-fg-soft">{tool.pricing}</p>
+            </section>
+          )}
+
+          {/* Integrations */}
+          {tool.integrations && tool.integrations.length > 0 && (
+            <section>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                Integrations
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {tool.integrations.map((integration, index) => (
+                  <span
+                    key={index}
+                    className="text-xs px-3 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft"
+                  >
+                    {integration}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Alternatives */}
+          {tool.alternatives && tool.alternatives.length > 0 && (
+            <section>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
+                Alternatives
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {tool.alternatives.map((alt, index) => (
+                  <span
+                    key={index}
+                    className="text-xs px-3 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-soft"
+                  >
+                    {alt}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Capability tags */}
           <section>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
               Capability tags
@@ -384,6 +511,8 @@ function ToolModal({
               ))}
             </div>
           </section>
+
+          {/* Departments */}
           {tool.departments.length > 0 && (
             <section>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-accent mb-2">
@@ -401,6 +530,8 @@ function ToolModal({
               </div>
             </section>
           )}
+
+          {/* Enterprise Pick */}
           {highlight && (
             <section className="rounded-2xl p-5 bg-gradient-to-br from-accent/15 to-transparent border border-accent/30">
               <h3 className="text-sm font-semibold text-fg-strong flex items-center gap-2 mb-2">
@@ -413,9 +544,79 @@ function ToolModal({
               </p>
             </section>
           )}
+
+          {/* Rating and Company Info */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            {tool.rating && (
+              <div className="rounded-xl p-3 bg-[var(--surface-1)]/60 border border-[var(--surface-border)] text-center">
+                <p className="text-fg-mute">Rating</p>
+                <p className="text-accent font-bold text-base">{tool.rating} ⭐</p>
+              </div>
+            )}
+            {tool.founded && (
+              <div className="rounded-xl p-3 bg-[var(--surface-1)]/60 border border-[var(--surface-border)] text-center">
+                <p className="text-fg-mute">Founded</p>
+                <p className="text-fg-strong font-semibold">{tool.founded}</p>
+              </div>
+            )}
+            {tool.headquarters && (
+              <div className="rounded-xl p-3 bg-[var(--surface-1)]/60 border border-[var(--surface-border)] text-center">
+                <p className="text-fg-mute">HQ</p>
+                <p className="text-fg-strong font-semibold truncate">{tool.headquarters}</p>
+              </div>
+            )}
+            <div className="rounded-xl p-3 bg-[var(--surface-1)]/60 border border-[var(--surface-border)] text-center">
+              <p className="text-fg-mute">Category</p>
+              <p className="text-fg-strong font-semibold truncate">{primary.split(" ").slice(0, 2).join(" ")}</p>
+            </div>
+          </div>
+
+          {/* Links */}
+          <div className="grid grid-cols-2 gap-2">
+            {tool.website && (
+              <a
+                href={tool.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-accent hover:underline text-center py-2 rounded-lg bg-[var(--surface-1)]/60 border border-[var(--surface-border)] hover:border-accent/40 transition-all"
+              >
+                🌐 Website
+              </a>
+            )}
+            {tool.documentation && (
+              <a
+                href={tool.documentation}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-accent hover:underline text-center py-2 rounded-lg bg-[var(--surface-1)]/60 border border-[var(--surface-border)] hover:border-accent/40 transition-all"
+              >
+                📚 Documentation
+              </a>
+            )}
+            {tool.community && (
+              <a
+                href={tool.community}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-accent hover:underline text-center py-2 rounded-lg bg-[var(--surface-1)]/60 border border-[var(--surface-border)] hover:border-accent/40 transition-all"
+              >
+                👥 Community
+              </a>
+            )}
+            {tool.support && (
+              <a
+                href={tool.support}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-accent hover:underline text-center py-2 rounded-lg bg-[var(--surface-1)]/60 border border-[var(--surface-border)] hover:border-accent/40 transition-all"
+              >
+                🆘 Support
+              </a>
+            )}
+          </div>
         </div>
 
-        <div className="mt-7 flex flex-col sm:flex-row gap-3">
+        <div className="mt-7 flex flex-col sm:flex-row gap-3 sticky bottom-0 bg-[var(--background)]/95 backdrop-blur-sm pt-4 border-t border-[var(--surface-border)]">
           <a
             href={tool.url}
             target="_blank"
@@ -447,12 +648,14 @@ function StackPanel({
   onRemove,
   onClear,
   onClose,
+  onViewStack,
 }: {
   stack: number[];
   tools: Tool[];
   onRemove: (id: number) => void;
   onClear: () => void;
   onClose: () => void;
+  onViewStack: () => void;
 }) {
   const selected = tools.filter((t) => stack.includes(t.id));
   const exportText = () => {
@@ -523,15 +726,18 @@ function StackPanel({
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {selected.length === 0 && (
-          <div className="text-center py-12 px-4">
-            <div className="mx-auto h-14 w-14 grid place-items-center rounded-2xl bg-[var(--surface-1)] border border-[var(--surface-border)] mb-3">
-              <Plus className="h-6 w-6 text-fg-mute" />
+          <button
+            onClick={onViewStack}
+            className="w-full text-center py-12 px-4 hover:bg-[var(--surface-1)] rounded-2xl transition-all"
+          >
+            <div className="mx-auto h-14 w-14 grid place-items-center rounded-2xl bg-[var(--surface-1)] border border-[var(--surface-border)] mb-3 hover:border-accent hover:bg-[var(--surface-strong-1)] transition-all">
+              <Plus className="h-6 w-6 text-fg-mute hover:text-accent" />
             </div>
             <p className="text-sm text-fg-soft">
-              No tools yet. Tap <span className="text-accent font-semibold">+</span> on any card to
-              start building your stack.
+              No tools yet. Click the <span className="text-accent font-semibold">+</span> button or
+              search for tools to add them to your stack.
             </p>
-          </div>
+          </button>
         )}
         {selected.map((t) => (
           <div key={t.id} className="glass rounded-xl p-3 flex items-center gap-3">
@@ -551,6 +757,12 @@ function StackPanel({
       </div>
       {selected.length > 0 && (
         <div className="p-4 border-t border-[var(--surface-border)] space-y-2">
+          <button
+            onClick={onViewStack}
+            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110"
+          >
+            <Rocket className="h-4 w-4" /> Open Stack
+          </button>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={exportText}
@@ -1597,6 +1809,134 @@ function ComparePage({
   );
 }
 
+function StackBuilderPage({
+  tools,
+  stack,
+  selection,
+  onToggleSelection,
+  onAddSelected,
+  onClearSelection,
+  onBack,
+}: {
+  tools: Tool[];
+  stack: number[];
+  selection: number[];
+  onToggleSelection: (id: number) => void;
+  onAddSelected: () => void;
+  onClearSelection: () => void;
+  onBack: () => void;
+}) {
+  const [search, setSearch] = useState("");
+  const filtered = useMemo(
+    () =>
+      tools.filter((t) =>
+        t.name.toLowerCase().includes(search.toLowerCase()) ||
+        t.summary.toLowerCase().includes(search.toLowerCase()) ||
+        t.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase())),
+      ),
+    [search, tools],
+  );
+  const selectedTools = tools.filter((t) => selection.includes(t.id));
+
+  return (
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-8">
+        <div>
+          <button
+            onClick={onBack}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--surface-1)] text-fg-strong border border-[var(--surface-border)] hover:bg-[var(--surface-strong-1)]"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to tools
+          </button>
+          <h1 className="mt-4 text-4xl sm:text-5xl font-black">
+            <span className="text-fg-strong">Build your </span>
+            <span className="text-gradient">AI stack</span>
+          </h1>
+          <p className="mt-3 max-w-2xl text-fg-soft">
+            Select the tools you want in your stack, then review and add them together.
+          </p>
+        </div>
+
+        <div className="grid gap-3 sm:auto-cols-min sm:grid-flow-col">
+          <button
+            onClick={onClearSelection}
+            className="rounded-2xl px-4 py-3 bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong hover:bg-[var(--surface-strong-1)]"
+          >
+            Clear selection
+          </button>
+          <button
+            onClick={onAddSelected}
+            disabled={selection.length === 0}
+            className="rounded-2xl px-4 py-3 bg-accent text-accent-foreground font-semibold hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Add {selection.length} selected to stack
+          </button>
+        </div>
+      </div>
+
+      <div className="glass-strong rounded-3xl p-5 mb-6">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-fg-mute" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search tools to add…"
+            className="w-full pl-11 pr-4 py-3 rounded-2xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent"
+          />
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2 text-sm text-fg-soft">
+          <span className="rounded-full bg-[var(--surface-1)] px-3 py-1 border border-[var(--surface-border)]">
+            {stack.length} tools already in stack
+          </span>
+          <span className="rounded-full bg-[var(--surface-1)] px-3 py-1 border border-[var(--surface-border)]">
+            {selection.length} selected for addition
+          </span>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {filtered.map((tool) => {
+          const selected = selection.includes(tool.id);
+          const inStack = stack.includes(tool.id);
+          return (
+            <div key={tool.id} className="glass rounded-3xl p-5 flex flex-col gap-4">
+              <div className="flex items-start gap-3">
+                <BrandLogo tool={tool} size={48} />
+                <div className="min-w-0 flex-1">
+                  <h2 className="truncate font-semibold text-fg-strong">{tool.name}</h2>
+                  <p className="text-[11px] text-accent truncate">{tool.categories[0]}</p>
+                </div>
+              </div>
+              <p className="text-sm text-fg-soft line-clamp-3">{tool.summary}</p>
+              <div className="flex flex-wrap gap-2">
+                {tool.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[11px] px-2 py-1 rounded-full bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-mute"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={() => onToggleSelection(tool.id)}
+                className={`mt-auto rounded-2xl px-4 py-3 font-semibold transition-all ${
+                  selected
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong hover:bg-[var(--surface-strong-1)]"
+                }`}
+              >
+                {selected ? "Selected" : inStack ? "Already in stack" : "Select"}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </main>
+  );
+}
+
 function FieldRow({
   label,
   selected,
@@ -1896,10 +2236,12 @@ export function AIDiscoveryApp() {
   const [activeTags, setActiveTags] = useState<Tag[]>([]);
   const [activeDept, setActiveDept] = useState<Department | null>(null);
   const [stack, setStack] = useState<number[]>([]);
+  const [stackSelection, setStackSelection] = useState<number[]>([]);
   const [compare, setCompare] = useState<number[]>([]);
   const [openTool, setOpenTool] = useState<Tool | null>(null);
   const [stackOpen, setStackOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const earthRef = useRef<HTMLDivElement | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -1934,6 +2276,10 @@ export function AIDiscoveryApp() {
   const addToStack = (id: number) => setStack((s) => (s.includes(id) ? s : [...s, id]));
   const toggleStack = (id: number) =>
     setStack((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const startStackBuilder = (id?: number) => {
+    setStackSelection((s) => (id === undefined ? s : s.includes(id) ? s : [...s, id]));
+    setPage("stack");
+  };
   const toggleTag = (tag: Tag) =>
     setActiveTags((s) => (s.includes(tag) ? s.filter((t) => t !== tag) : [...s, tag]));
   const toggleCompare = (id: number) =>
@@ -1941,8 +2287,22 @@ export function AIDiscoveryApp() {
       s.includes(id) ? s.filter((x) => x !== id) : s.length >= 4 ? s : [...s, id],
     );
 
+  const handleScroll = useCallback(() => {
+    if (!earthRef.current) return;
+    const rotation = window.scrollY * 0.14;
+    earthRef.current.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-hidden">
+      <div ref={earthRef} className="earth-scroll-planet" aria-hidden="true" />
       <Header
         page={page}
         setPage={setPage}
@@ -1965,6 +2325,25 @@ export function AIDiscoveryApp() {
         />
       )}
 
+      {page === "stack" && (
+        <StackBuilderPage
+          tools={TOOLS}
+          stack={stack}
+          selection={stackSelection}
+          onToggleSelection={(id) =>
+            setStackSelection((s) =>
+              s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
+            )
+          }
+          onAddSelected={() => {
+            setStack((s) => [...s, ...stackSelection.filter((id) => !s.includes(id))]);
+            setStackSelection([]);
+          }}
+          onClearSelection={() => setStackSelection([])}
+          onBack={() => setPage("home")}
+        />
+      )}
+
       {page === "home" && (
         <>
           {/* Hero */}
@@ -1979,7 +2358,7 @@ export function AIDiscoveryApp() {
                 <span className="text-gradient">Channel</span>
               </h1>
               <p className="mt-5 max-w-2xl mx-auto text-base sm:text-lg text-fg-soft leading-relaxed">
-                eSTUDY South Africa's expert directory of 70+ enterprise-grade AI tools — engineered
+                eSTUDY South Africa's expert directory of 100+ enterprise-grade AI tools  engineered
                 to help your teams discover, compare, and assemble the perfect automation stack.
               </p>
 
@@ -2024,7 +2403,7 @@ export function AIDiscoveryApp() {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-fg-strong flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-accent" /> Trending across eSTUDY
+                <TrendingUp className="h-5 w-5 text-accent" /> Popular Tools
               </h2>
               <span className="text-xs text-fg-mute">Updated weekly</span>
             </div>
@@ -2203,7 +2582,7 @@ export function AIDiscoveryApp() {
                         key={t.id}
                         tool={t}
                         inStack={stack.includes(t.id)}
-                        onAdd={() => (stackOpen ? addToStack(t.id) : toggleStack(t.id))}
+                        onAdd={() => addToStack(t.id)}
                         onOpen={() => setOpenTool(t)}
                         showCompare
                         compareSelected={compare.includes(t.id)}
@@ -2259,6 +2638,11 @@ export function AIDiscoveryApp() {
             onRemove={(id) => setStack((s) => s.filter((x) => x !== id))}
             onClear={() => setStack([])}
             onClose={() => setStackOpen(false)}
+            onViewStack={() => {
+              setStackSelection([]);
+              setPage("stack");
+              setStackOpen(false);
+            }}
           />
         </>
       )}
