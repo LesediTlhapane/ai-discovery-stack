@@ -174,7 +174,7 @@ const RAW: Raw[] = [
       "Occasional verbosity",
       "No native multimodal capabilities",
     ],
-    pricing: "Free tier available; ChatGPT Plus at $20/month",
+    pricing: "Free tier available; ChatGPT Plus at R380/month",
     integrations: ["Zapier", "Slack", "Microsoft Teams", "Google Workspace", "Salesforce"],
     useCases: [
       "Content creation and editing",
@@ -229,7 +229,7 @@ const RAW: Raw[] = [
       "Smaller user community",
       "Fewer third-party integrations",
     ],
-    pricing: "Free tier; Claude Pro at $20/month; Enterprise pricing available",
+    pricing: "Free tier; Claude Pro at R399/month; Enterprise pricing available",
     integrations: ["Notion", "Slack", "Google Drive", "Dropbox", "Salesforce"],
     useCases: [
       "Legal document review",
@@ -284,7 +284,7 @@ const RAW: Raw[] = [
       "Can be inconsistent",
       "Complex pricing structure",
     ],
-    pricing: "Free tier; Gemini Pro at $20/month",
+    pricing: "Free tier; Gemini Pro at R429/month",
     integrations: ["Google Workspace", "Gmail", "Google Drive", "YouTube", "Google Cloud"],
     useCases: [
       "Multimodal research",
@@ -337,7 +337,7 @@ const RAW: Raw[] = [
       "Less refined responses",
       "X platform dependency",
     ],
-    pricing: "Included with X Premium+; exact pricing varies by region",
+    pricing: "X Premium+ subscriber access 'SuperGrok' (approx R495/month)",
     integrations: ["X (Twitter)", "Slack", "Discord"],
     useCases: [
       "Social media monitoring",
@@ -488,7 +488,7 @@ const RAW: Raw[] = [
       "Limited free tier",
       "Occasional quality inconsistency",
     ],
-    pricing: "Pro at $69/month monthly or $59/month billed yearly; Business custom pricing.",
+    pricing: "Starting at R741/month; Enterprise pricing available",
     integrations: ["Salesforce", "HubSpot", "WordPress", "Shopify", "Google Docs"],
     useCases: [
       "Brand copywriting",
@@ -538,7 +538,7 @@ const RAW: Raw[] = [
       "Less polished output than competitors",
       "Occasional duplication",
     ],
-    pricing: "Free tier; Self-Serve starts at $29/month billed monthly; Enterprise custom pricing.",
+    pricing: "Free tier; Pro at R425/month; Enterprise pricing available",
     integrations: ["Zapier", "HubSpot", "WordPress", "Shopify", "Google Sheets"],
     useCases: [
       "Sales outreach",
@@ -638,7 +638,7 @@ const RAW: Raw[] = [
       "Limited creative capabilities",
       "Focus on marketing content only",
     ],
-    pricing: "Starter at $49/month; Data-Driven at $99/month; Business/Enterprise custom pricing.",
+    pricing: "Starting at R1 630/month; Enterprise pricing available",
     integrations: ["Google Ads", "Facebook Ads", "HubSpot", "Salesforce", "WordPress"],
     useCases: [
       "Performance marketing",
@@ -688,7 +688,7 @@ const RAW: Raw[] = [
       "Privacy concerns with code",
       "Limited customization",
     ],
-    pricing: "Individual at $10/month; Business at $19/month; Enterprise pricing available",
+    pricing: "Pro: R165/month, Pro+: R645 or Max: R 1 650; Enterprise pricing available",
     integrations: ["VS Code", "JetBrains", "Neovim", "GitHub", "Azure DevOps"],
     useCases: [
       "Daily coding tasks",
@@ -741,7 +741,7 @@ const RAW: Raw[] = [
       "Limited to VS Code ecosystem",
       "Can be resource intensive",
     ],
-    pricing: "Pricing unavailable; verify with Cursor",
+    pricing: "R330/month for Pro; Enterprise pricing available",
     integrations: ["VS Code", "GitHub", "GitLab", "Bitbucket", "Jira"],
     useCases: [
       "Large codebase navigation",
@@ -792,7 +792,7 @@ const RAW: Raw[] = [
       "Can be inconsistent",
       "Limited customization",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Business Plan at R495/month",
     integrations: ["Vercel", "React", "Tailwind CSS", "Figma", "GitHub"],
     useCases: [
       "UI prototyping",
@@ -846,7 +846,7 @@ const RAW: Raw[] = [
       "Requires review of generated code",
       "Limited free tier",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R475/month",
     integrations: ["PostgreSQL", "REST APIs", "GitHub", "Slack", "Linear"],
     useCases: [
       "Internal tool creation",
@@ -896,7 +896,7 @@ const RAW: Raw[] = [
       "Steeper learning curve",
       "Higher price point",
     ],
-    pricing: "Included with Claude Pro subscription",
+    pricing: "R399/month with Claude Pro",
     integrations: ["Git", "VS Code", "GitHub", "Jira", "Slack"],
     useCases: [
       "CLI workflow automation",
@@ -947,7 +947,7 @@ const RAW: Raw[] = [
       "Smaller community",
       "Limited integrations",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R285/month; Enterprise pricing available",
     integrations: ["PostgreSQL", "MySQL", "REST APIs", "Google Sheets", "Slack"],
     useCases: [
       "Internal tool development",
@@ -998,7 +998,7 @@ const RAW: Raw[] = [
       "Less cloud features",
       "Limited free tier",
     ],
-    pricing: "Free tier; Code Assistant at $39/user/month annual; Agentic Platform at $59/user/month annual; custom enterprise pricing.",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["VS Code", "JetBrains", "Neovim", "Sublime", "Vim"],
     useCases: [
       "Security-sensitive development",
@@ -1048,7 +1048,7 @@ const RAW: Raw[] = [
       "Limited customization",
       "Privacy concerns",
     ],
-    pricing: "Pricing unavailable; verify with Codeium",
+    pricing: "Free for individuals; Pro: R329/month; Enterprise pricing available",
     integrations: ["VS Code", "JetBrains", "Neovim", "Sublime", "Vim"],
     useCases: [
       "Daily coding tasks",
@@ -1102,7 +1102,7 @@ const RAW: Raw[] = [
       "Limited customization",
       "Requires internet connection",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R285/month; Teams pricing available",
     integrations: ["GitHub", "Netlify", "Vercel", "AWS", "Google Cloud"],
     useCases: [
       "Rapid prototyping",
@@ -1204,7 +1204,7 @@ const RAW: Raw[] = [
       "Less creative capabilities",
       "Search-focused only",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R349/month",
     integrations: ["Web Browser", "Chrome Extension", "Mobile Apps"],
     useCases: [
       "Research",
@@ -1306,7 +1306,7 @@ const RAW: Raw[] = [
       "Limited free tier",
       "Academic focus only",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Free tier; Pro at R285/month",
     integrations: ["Zotero", "Mendeley", "EndNote", "Web Browser"],
     useCases: [
       "Academic research",
@@ -1360,7 +1360,7 @@ const RAW: Raw[] = [
       "Can be overwhelming",
       "Learning curve",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Free tier; Pro at R810/month",
     integrations: ["Zotero", "Mendeley", "Web Browser", "Google Scholar"],
     useCases: [
       "Literature reviews",
@@ -1462,7 +1462,7 @@ const RAW: Raw[] = [
       "Less control than some alternatives",
       "Can be inconsistent",
     ],
-    pricing: "Basic at $8/month; Standard at $24/month; Pro at $60/month",
+    pricing: "Starting at R190/month - Basic Plan; R380/month - Standard Plan; R950/month - Pro Plan",
     integrations: ["Discord", "Slack"],
     useCases: [
       "Brand visuals",
@@ -1512,7 +1512,7 @@ const RAW: Raw[] = [
       "Limited controls",
       "Generation limits",
     ],
-    pricing: "Available with ChatGPT Plus (from $20/month)",
+    pricing: "Available with ChatGPT Plus (R380/month)",
     integrations: ["ChatGPT", "OpenAI API"],
     useCases: [
       "Concept visualization",
@@ -1617,7 +1617,7 @@ const RAW: Raw[] = [
       "Can produce generic designs",
       "Limited offline capabilities",
     ],
-    pricing: "Free tier; Pro at $12.99/month; Enterprise pricing available",
+    pricing: "Free tier; Pro at R110/month; Enterprise pricing available",
     integrations: ["Google Drive", "Dropbox", "Slack", "Microsoft Teams"],
     useCases: [
       "Social media design",
@@ -1668,7 +1668,7 @@ const RAW: Raw[] = [
       "Less creative than Midjourney",
       "Limited without Adobe suite",
     ],
-    pricing: "Included with Adobe Creative Cloud; standalone pricing varies by region",
+    pricing: "Included with Adobe Creative Cloud (from R219,65 (standard) to R438,15/month(Pro))",
     integrations: ["Photoshop", "Illustrator", "Express", "Adobe Stock"],
     useCases: [
       "Enterprise marketing",
@@ -1722,7 +1722,7 @@ const RAW: Raw[] = [
       "Requires Workspace subscription",
       "Limited controls",
     ],
-    pricing: "Included with Google Workspace plans; pricing varies by plan",
+    pricing: "Included with Google Workspace (from R190/month)",
     integrations: ["Google Slides", "Google Drive", "Google Docs"],
     useCases: [
       "Workspace collaboration",
@@ -1773,7 +1773,7 @@ const RAW: Raw[] = [
       "Limited free tier",
       "Internet-dependent",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R806/month; Enterprise pricing available",
     integrations: ["Slack", "Teams", "Email", "LMS platforms"],
     useCases: [
       "Corporate training",
@@ -1823,7 +1823,7 @@ const RAW: Raw[] = [
       "Requires powerful hardware",
       "Limited free tier",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R806/month; Enterprise pricing available",
     integrations: ["Adobe Premiere", "After Effects", "Final Cut", "Vimeo"],
     useCases: [
       "Cinematic videos",
@@ -1873,7 +1873,7 @@ const RAW: Raw[] = [
       "Limited free tier",
       "Requires training for best results",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; starter at R285/month; Pro at R1,140/month; Enterprise pricing available",
     integrations: ["Adobe Audition", "Audacity", "DAWs", "Web Apps"],
     useCases: [
       "Voiceovers",
@@ -1978,7 +1978,7 @@ const RAW: Raw[] = [
       "Requires good transcription",
       "Processing time",
     ],
-    pricing: "Free tier; Creator at $12/month; Pro at $24/month; Enterprise pricing available",
+    pricing: "Free Tier; Hobbyist: R395; Creator: R1,140; Pro: R2,280; Enterprise pricing available",
     integrations: ["Adobe Premiere", "Audacity", "Final Cut", "YouTube"],
     useCases: [
       "Podcast editing",
@@ -2080,7 +2080,7 @@ const RAW: Raw[] = [
       "Copyright concerns",
       "Limited advanced features",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R169/month",
     integrations: ["Web App", "Mobile App"],
     useCases: [
       "Jingles",
@@ -2131,7 +2131,7 @@ const RAW: Raw[] = [
       "Can be expensive",
       "Processing time",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R285/month; Enterprise pricing available",
     integrations: ["Adobe Premiere", "Audacity", "LMS platforms"],
     useCases: [
       "E-learning narration",
@@ -2185,7 +2185,7 @@ const RAW: Raw[] = [
       "Self-hosting overhead",
       "Limited cloud options",
     ],
-    pricing: "Free (self-hosted); cloud pricing available; verify with n8n",
+    pricing: "Free (self-hosted); Cloud pricing available from R380/month",
     integrations: ["HTTP", "REST APIs", "GraphQL", "Webhooks"],
     useCases: [
       "Workflow automation",
@@ -2236,7 +2236,7 @@ const RAW: Raw[] = [
       "Limited customization",
       "Learning curve",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Starting at R380/month; Enterprise pricing available",
     integrations: ["Slack", "Salesforce", "HubSpot", "Google Sheets"],
     useCases: [
       "Cross-app automation",
@@ -2290,7 +2290,7 @@ const RAW: Raw[] = [
       "Less control over layout",
       "Internet-dependent",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R304/month; Enterprise pricing available",
     integrations: ["Slack", "Google Drive", "Microsoft Teams"],
     useCases: [
       "Pitch decks",
@@ -2344,7 +2344,7 @@ const RAW: Raw[] = [
       "Limited free tier",
       "Learning curve",
     ],
-    pricing: "Pricing unavailable; verify with Gumloop",
+    pricing: "Pro at R551/month; Enterprise pricing available",
     integrations: ["Web APIs", "Databases", "Email", "Slack"],
     useCases: [
       "Web scraping",
@@ -2397,7 +2397,7 @@ const RAW: Raw[] = [
       "Can be expensive",
       "Privacy concerns",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R323/month; Enterprise pricing available",
     integrations: ["Zoom", "Google Meet", "Microsoft Teams", "Slack", "Salesforce"],
     useCases: [
       "Meeting notes",
@@ -2448,7 +2448,7 @@ const RAW: Raw[] = [
       "Can be slow",
       "Expensive for teams",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Pro at R228/month; Enterprise pricing available",
     integrations: ["Slack", "Google Drive", "Microsoft Teams"],
     useCases: [
       "Presentations",
@@ -2551,7 +2551,7 @@ const RAW: Raw[] = [
       "Can be complex",
       "Requires content team",
     ],
-    pricing: "Pricing unavailable; verify with Clearscope",
+    pricing: "Starting at R3,230/month; Enterprise pricing available",
     integrations: ["Google Docs", "WordPress", "HubSpot"],
     useCases: [
       "SEO content optimization",
@@ -2602,7 +2602,7 @@ const RAW: Raw[] = [
       "Limited to detection",
       "Pricing for volume",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Starting at R570/month; Enterprise pricing available",
     integrations: ["WordPress", "Content management systems"],
     useCases: [
       "AI content detection",
@@ -2656,7 +2656,7 @@ const RAW: Raw[] = [
       "Can be expensive",
       "Data storage limits",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R342/month; Enterprise pricing available",
     integrations: ["Zoom", "Google Meet", "Microsoft Teams", "Slack", "Salesforce"],
     useCases: [
       "Sales call coaching",
@@ -2706,7 +2706,7 @@ const RAW: Raw[] = [
       "Limited to news",
       "Requires setup",
     ],
-    pricing: "Pricing unavailable; verify with Feedly Leo",
+    pricing: "Starting at R114/month; Enterprise pricing available",
     integrations: ["Slack", "Microsoft Teams", "Google Workspace"],
     useCases: [
       "Competitive monitoring",
@@ -2756,7 +2756,7 @@ const RAW: Raw[] = [
       "Limited customization",
       "Requires training",
     ],
-    pricing: "Included with HubSpot subscriptions; pricing varies by plan",
+    pricing: "Starting at R855/month; Enterprise pricing available",
     integrations: ["Salesforce", "Gmail", "Outlook", "Slack", "Zoom"],
     useCases: [
       "Customer relationship management",
@@ -2906,7 +2906,7 @@ const RAW: Raw[] = [
       "Language coverage gaps",
       "Can be expensive",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R380/month; Enterprise pricing available",
     integrations: ["Microsoft Office", "Google Workspace", "Web Browser"],
     useCases: [
       "Document translation",
@@ -2959,7 +2959,7 @@ const RAW: Raw[] = [
       "Limited free tier",
       "Privacy concerns",
     ],
-    pricing: "Grammarly Pro starts at $12/month; Enterprise custom pricing.",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["Microsoft Office", "Google Workspace", "Slack", "Browsers"],
     useCases: [
       "Corporate writing",
@@ -3009,7 +3009,7 @@ const RAW: Raw[] = [
       "Educational focus only",
       "Subscription required for advanced",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Premium at R380/month",
     integrations: ["Web Browser", "Microsoft Word", "Google Docs"],
     useCases: [
       "Content editing",
@@ -3059,7 +3059,7 @@ const RAW: Raw[] = [
       "Can be complex",
       "Support issues",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Starting at R570/month; Enterprise pricing available",
     integrations: ["Banks", "PayPal", "Square", "Shopify", "Salesforce"],
     useCases: [
       "Bookkeeping",
@@ -3109,7 +3109,7 @@ const RAW: Raw[] = [
       "Reporting limitations",
       "Support issues",
     ],
-    pricing: "Included with Xero plans; pricing varies",
+    pricing: "Starting at R228/month; Enterprise pricing available",
     integrations: ["Banks", "PayPal", "Stripe", "Shopify", "HubSpot"],
     useCases: [
       "Accounting",
@@ -3212,7 +3212,7 @@ const RAW: Raw[] = [
       "Less professional",
       "Limited features",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R304/month",
     integrations: ["Slack", "Google Drive", "Microsoft Teams"],
     useCases: [
       "Concept pitches",
@@ -3262,7 +3262,7 @@ const RAW: Raw[] = [
       "Can be expensive",
       "Internet-dependent",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["Google Slides", "PowerPoint", "Zoom", "Teams"],
     useCases: [
       "Classroom engagement",
@@ -3412,7 +3412,7 @@ const RAW: Raw[] = [
       "Less professional than desktop",
       "Performance issues",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R285/month; Enterprise pricing available",
     integrations: ["Web Browser", "Figma", "Sketch", "Adobe XD"],
     useCases: [
       "Web-based 3D design",
@@ -3462,7 +3462,7 @@ const RAW: Raw[] = [
       "Requires technical expertise",
       "Can be expensive",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R3,515/month; Enterprise pricing available",
     integrations: ["Unity Engine", "VS Code", "Git", "Perforce"],
     useCases: [
       "Game development",
@@ -3665,7 +3665,7 @@ const RAW: Raw[] = [
       "False positives",
       "Requires integration",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R475/month; Enterprise pricing available",
     integrations: ["GitHub", "GitLab", "Bitbucket", "Jenkins", "Jira"],
     useCases: [
       "Security scanning",
@@ -3911,7 +3911,7 @@ const NEW_TOOLS: Raw[] = [
       "Privacy concerns",
       "Subscription for advanced",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Free tier; Pro at R285/month",
     integrations: ["Mobile Apps", "Web Browser"],
     useCases: [
       "Personal conversation",
@@ -3960,7 +3960,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited features",
       "Privacy concerns",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Free tier; Pro at R285/month",
     integrations: ["Google Workspace", "Microsoft 365", "GitHub", "Slack"],
     useCases: [
       "Research and search",
@@ -4058,7 +4058,7 @@ const NEW_TOOLS: Raw[] = [
       "Subscription required",
       "Less advanced than Grammarly",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R380/month; Enterprise pricing available",
     integrations: ["Google Docs", "Microsoft Word", "Web Browser"],
     useCases: [
       "Professional writing",
@@ -4107,7 +4107,7 @@ const NEW_TOOLS: Raw[] = [
       "Can be generic",
       "Subscription required",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R190/month",
     integrations: ["WordPress", "Slack", "Google Docs", "Web Browser"],
     useCases: [
       "Content creation",
@@ -4156,7 +4156,7 @@ const NEW_TOOLS: Raw[] = [
       "Performance issues",
       "Subscription required for advanced",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R285/month; Teams pricing available",
     integrations: ["GitHub", "Netlify", "Vercel", "AWS", "Google Cloud"],
     useCases: [
       "Collaborative development",
@@ -4205,7 +4205,7 @@ const NEW_TOOLS: Raw[] = [
       "Can be expensive",
       "Learning curve",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R475/month; Enterprise pricing available",
     integrations: ["Netlify", "Vercel", "GitHub", "AWS", "Supabase"],
     useCases: [
       "Full-stack development",
@@ -4303,7 +4303,7 @@ const NEW_TOOLS: Raw[] = [
       "Setup time",
       "Resource intensive",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R361/month; Enterprise pricing available",
     integrations: ["GitHub", "Jira", "Slack", "Kubernetes", "AWS"],
     useCases: [
       "DevOps automation",
@@ -4401,7 +4401,7 @@ const NEW_TOOLS: Raw[] = [
       "Subscription required",
       "Variable quality",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["Photoshop", "Figma", "Canva", "Web Browser"],
     useCases: [
       "Creative design",
@@ -4450,7 +4450,7 @@ const NEW_TOOLS: Raw[] = [
       "Subscription required",
       "Less artistic control",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R304/month",
     integrations: ["Figma", "Canva", "Adobe", "Web Browser"],
     useCases: [
       "Graphic design",
@@ -4499,7 +4499,7 @@ const NEW_TOOLS: Raw[] = [
       "Slow generation",
       "Limited free tier",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Free tier; Pro at R285/month",
     integrations: ["Photoshop", "Figma", "Canva", "Web Browser"],
     useCases: [
       "Image creation",
@@ -4548,7 +4548,7 @@ const NEW_TOOLS: Raw[] = [
       "Can be slow",
       "Subscription required",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Free tier; Pro at R285/month",
     integrations: ["Figma", "Photoshop", "Canva", "Web Browser"],
     useCases: [
       "Real-time design",
@@ -4597,7 +4597,7 @@ const NEW_TOOLS: Raw[] = [
       "Subscription required",
       "Limited features",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R190/month",
     integrations: ["Adobe Premiere", "Final Cut", "YouTube", "TikTok"],
     useCases: [
       "Video creation",
@@ -4646,7 +4646,7 @@ const NEW_TOOLS: Raw[] = [
       "Can be expensive",
       "Learning curve",
     ],
-    pricing: "Pricing unavailable; verify with Microsoft Copilot",
+    pricing: "R570/month; Enterprise pricing available",
     integrations: ["Microsoft 365", "GitHub", "Azure", "Teams", "Outlook"],
     useCases: [
       "Enterprise productivity",
@@ -4695,7 +4695,7 @@ const NEW_TOOLS: Raw[] = [
       "Can be complex",
       "Expensive for teams",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R190/month; Enterprise pricing available",
     integrations: ["Slack", "Google Drive", "GitHub", "Jira", "Figma"],
     useCases: [
       "Knowledge management",
@@ -4744,7 +4744,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited free tier",
       "Learning curve",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R171/month; Enterprise pricing available",
     integrations: ["Slack", "Salesforce", "Google Sheets", "HubSpot", "GitHub"],
     useCases: [
       "Workflow automation",
@@ -4793,7 +4793,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited customization",
       "Requires integration",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["Databases", "APIs", "GraphQL", "Salesforce", "HubSpot"],
     useCases: [
       "Internal tools",
@@ -4842,7 +4842,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited free tier",
       "Complex for large teams",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["Slack", "Google Drive", "Salesforce", "Zapier", "Gmail"],
     useCases: [
       "Project management",
@@ -4891,7 +4891,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited free tier",
       "Avatar quality varies",
     ],
-    pricing: "Pricing unavailable; verify with vendor",
+    pricing: "Starting at R570/month; Enterprise pricing available",
     integrations: ["LMS platforms", "YouTube", "Vimeo", "Slack", "Teams"],
     useCases: [
       "Corporate training",
@@ -4940,7 +4940,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited free tier",
       "Voice variety",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R361/month; Enterprise pricing available",
     integrations: ["Adobe Premiere", "Final Cut", "YouTube", "LMS platforms"],
     useCases: [
       "Video voiceovers",
@@ -5134,7 +5134,7 @@ const NEW_TOOLS: Raw[] = [
       "Limited features",
       "Privacy concerns",
     ],
-    pricing: "Included with Google Workspace plans; pricing varies by plan",
+    pricing: "Included with Google Workspace plans (from R190/month)",
     integrations: ["Gmail", "Docs", "Slides", "Sheets", "Drive"],
     useCases: [
       "Team collaboration",
@@ -5232,7 +5232,7 @@ const NEW_TOOLS: Raw[] = [
       "Complex setup",
       "Limited customization",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R570/month; Enterprise pricing available",
     integrations: ["Slack", "Salesforce", "HubSpot", "Google Workspace"],
     useCases: [
       "Process documentation",
@@ -5281,7 +5281,7 @@ const NEW_TOOLS: Raw[] = [
       "Learning curve",
       "Internet-dependent",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R152/month; Enterprise pricing available",
     integrations: ["Slack", "Google Workspace", "Microsoft 365", "Figma", "Jira"],
     useCases: [
       "Brainstorming",
@@ -5330,7 +5330,7 @@ const NEW_TOOLS: Raw[] = [
       "Complex for small teams",
       "Learning curve",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R209/month; Enterprise pricing available",
     integrations: ["Slack", "Google Workspace", "Microsoft 365", "Zoom", "GitHub"],
     useCases: [
       "Project management",
@@ -5379,7 +5379,7 @@ const NEW_TOOLS: Raw[] = [
       "Learning curve",
       "Internet-dependent",
     ],
-    pricing: "Free tier available; Pro/paid plans available (exact pricing not verified)",
+    pricing: "Free tier; Pro at R228/month; Enterprise pricing available",
     integrations: ["Slack", "Google Workspace", "Microsoft 365", "Jira", "Notion"],
     useCases: [
       "UI/UX design",

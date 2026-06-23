@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
-// api/news.ts
 // api/news.js
 export default async function handler(req, res) {
-  // Enable CORS for development
+  // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -17,43 +16,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('🟢 API: Fetching news from RSS sources...');
+    console.log('🟢 API: Fetching news...');
     
-    // Try multiple RSS sources
-    const rssSources = [
-      'https://feeds.feedburner.com/TechCrunch',
-      'https://techcrunch.com/feed/',
-      'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
-      'https://www.wired.com/feed/rss',
-      'https://feeds.feedburner.com/venturebeat/SZYF'
-    ];
+    // Use a simpler, more reliable RSS feed
+    const rssUrl = 'https://feeds.feedburner.com/TechCrunch';
+    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
     
-    let articles = [];
+    const response = await fetch(proxyUrl);
+    const data = await response.json();
     
-    for (const rssUrl of rssSources) {
-      try {
-        console.log(`🟢 API: Trying RSS source: ${rssUrl}`);
-        const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
-        
-        if (data.status === 'ok' && data.items && data.items.length > 0) {
-          console.log(`✅ API: Success from ${rssUrl} with ${data.items.length} items`);
-          articles = data.items;
-          break;
-        }
-      } catch (e) {
-        console.warn(`⚠️ API: Failed to fetch ${rssUrl}:`, e.message);
-      }
-    }
-    
-    if (articles.length > 0) {
+    if (data.status === 'ok' && data.items && data.items.length > 0) {
+      console.log(`✅ API: Got ${data.items.length} items`);
       res.status(200).json({ 
         status: 'ok', 
-        items: articles.slice(0, 20)
+        items: data.items.slice(0, 20)
       });
     } else {
-      console.warn('⚠️ API: No articles found, using fallback data');
+      console.warn('⚠️ API: No items, using fallback');
       res.status(200).json({ 
         status: 'ok', 
         items: getFallbackData()
@@ -102,27 +81,6 @@ function getFallbackData() {
       title: 'AI-Powered CRM Platform Disrupts Salesforce',
       description: 'New AI-native CRM promises autonomous lead management and sales automation.',
       author: 'VentureBeat',
-      pubDate: new Date().toISOString(),
-      link: '#'
-    },
-    {
-      title: 'Claude 4 Released with Extended Context Window',
-      description: 'Anthropic ships Claude 4 with 1M token context and improved reasoning capabilities.',
-      author: 'AI Research Lab',
-      pubDate: new Date().toISOString(),
-      link: '#'
-    },
-    {
-      title: 'n8n Launches AI Agent Builder for Enterprise Workflows',
-      description: 'New visual interface for building autonomous agents with drag-and-drop workflow automation.',
-      author: 'Workflow Automation Team',
-      pubDate: new Date().toISOString(),
-      link: '#'
-    },
-    {
-      title: 'OpenAI Announces GPT-5 Enterprise with Enhanced Security',
-      description: 'New enterprise features for large-scale deployments with enhanced security and compliance.',
-      author: 'Tech Blog',
       pubDate: new Date().toISOString(),
       link: '#'
     }
