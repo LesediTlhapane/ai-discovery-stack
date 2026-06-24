@@ -365,7 +365,7 @@ const RAW: Raw[] = [
     benefits:
       "Publicly available model weights; slashes API costs for budget-conscious enterprises.",
     bestFor: "High-volume text workloads where API cost discipline matters.",
-    url: "https://www.deepseek.com",
+    url: "https://www.deepseek.com/en/",
     tags: ["Open Source", "Free-Tier"],
     domain: "deepseek.com",
     features: [
@@ -3189,7 +3189,7 @@ const RAW: Raw[] = [
     summary: "Rapid text-to-presentation generator laying out interactive canvas slides.",
     benefits: "Formats content into complete presentations in moments.",
     bestFor: "Quick internal concept pitches and slide outlines.",
-    url: "https://tome.app",
+    url: "https://tomeapp.ai/",
     tags: ["Free-Tier"],
     domain: "tome.app",
     features: [
@@ -3986,7 +3986,7 @@ const NEW_TOOLS: Raw[] = [
     summary: "Developer-focused search engine with real-time web and documentation access.",
     benefits: "Provides contextual, developer-specific answers with verified sources.",
     bestFor: "Development research, debugging, and learning new technologies.",
-    url: "https://phind.com",
+    url: "https://phindai.org/",
     tags: ["Free-Tier"],
     domain: "phind.com",
     features: [
