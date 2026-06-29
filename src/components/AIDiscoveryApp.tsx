@@ -2151,9 +2151,11 @@ function Header({
     <header className="sticky top-0 z-50 bg-[#052b66] border-b border-[#0a3d8a] shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
         <button onClick={() => setPage("home")} className="flex items-center gap-3 min-w-0 shrink-0">
-          <div className="grid place-items-center h-9 w-9 rounded-xl bg-gradient-to-br from-accent to-emerald-400 text-accent-foreground shadow-[0_0_20px_rgba(69,204,66,0.4)]">
-            <Sparkles className="h-4 w-4" />
-          </div>
+            <img 
+    src="logo.png" 
+    alt="AI Discovery Channel" 
+    className="h-25 w-25 rounded-xl object-cover"
+  />
           <div className="min-w-0 text-left hidden sm:block">
             <p className="text-sm font-bold text-white truncate">AI Discovery Channel</p>
             <p className="text-[10px] text-white/60 tracking-wider truncate">
@@ -2399,36 +2401,7 @@ export function AIDiscoveryApp() {
             </div>
           </section>
 
-          {/* Trending feed */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-fg-strong flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-accent" /> Popular Tools
-              </h2>
-              <span className="text-xs text-fg-mute">Updated weekly</span>
-            </div>
-            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
-              {trending.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => setOpenTool(t)}
-                  className="snap-start shrink-0 w-56 glass rounded-2xl p-4 text-left hover:border-accent/40 hover:-translate-y-1 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <BrandLogo tool={t} size={44} />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-fg-strong truncate">{t.name}</p>
-                      <p className="text-[11px] text-accent truncate">{t.categories[0]}</p>
-                    </div>
-                    <Star className="h-3.5 w-3.5 text-accent fill-accent" />
-                  </div>
-                  <p className="mt-2 text-xs text-fg-soft line-clamp-2">{t.summary}</p>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          {/* Department filter strip */}
+          {/* Department filter strip - MOVED TO TOP (immediately after hero) */}
           <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
             <div className="glass-strong rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-3">
@@ -2462,6 +2435,35 @@ export function AIDiscoveryApp() {
                   </button>
                 ))}
               </div>
+            </div>
+          </section>
+
+          {/* Trending feed - MOVED BELOW department filter */}
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-fg-strong flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-accent" /> Popular Tools
+              </h2>
+              <span className="text-xs text-fg-mute">Updated weekly</span>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
+              {trending.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setOpenTool(t)}
+                  className="snap-start shrink-0 w-56 glass rounded-2xl p-4 text-left hover:border-accent/40 hover:-translate-y-1 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <BrandLogo tool={t} size={44} />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-fg-strong truncate">{t.name}</p>
+                      <p className="text-[11px] text-accent truncate">{t.categories[0]}</p>
+                    </div>
+                    <Star className="h-3.5 w-3.5 text-accent fill-accent" />
+                  </div>
+                  <p className="mt-2 text-xs text-fg-soft line-clamp-2">{t.summary}</p>
+                </button>
+              ))}
             </div>
           </section>
 
