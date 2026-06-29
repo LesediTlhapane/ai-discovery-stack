@@ -887,7 +887,7 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
         <div className="fixed bottom-24 right-5 z-40 w-[calc(100vw-2.5rem)] sm:w-96 h-[70vh] sm:h-[560px] glass-strong rounded-3xl flex flex-col overflow-hidden animate-fade-in-up shadow-2xl">
           <div className="flex items-center gap-3 p-4 border-b border-[var(--surface-border)] bg-gradient-to-r from-primary/30 to-transparent">
             <img
-              src="/logo.png"
+              src="/estudy.jpeg"
               alt="eSTUDY Logo"
               className="h-10 w-10 rounded-xl object-cover"
             />
@@ -1029,6 +1029,613 @@ function AboutPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+/* ============================================
+   TRENDS PAGE
+   ============================================ */
+
+interface FeedPost {
+  id: number;
+  author: string;
+  role: string;
+  org: string;
+  time: string;
+  body: string;
+  topic: string;
+  reactions: number;
+  comments: number;
+  url?: string;
+}
+
+interface HNStory {
+  id: number;
+  title: string;
+  by: string;
+  time: number;
+  score: number;
+  descendants: number;
+  url?: string;
+  text?: string;
+  type: string;
+}
+
+interface DevToArticle {
+  id: number;
+  title: string;
+  description?: string;
+  published_at: string;
+  positive_reactions_count: number;
+  comments_count: number;
+  user: {
+    name: string;
+    username: string;
+  };
+  tag_list: string[];
+  url?: string;
+}
+
+const AI_KEYWORDS = [
+  'ai', 'artificial intelligence', 'machine learning', 'deep learning',
+  'neural network', 'gpt', 'claude', 'llm', 'large language model',
+  'automation', 'robotics', 'openai', 'anthropic', 'gemini', 'bard',
+  'chatgpt', 'copilot', 'cursor', 'n8n', 'zapier', 'agent', 'autonomous',
+  'computer vision', 'nlp', 'natural language', 'speech recognition',
+  'generative ai', 'stable diffusion', 'midjourney', 'dall-e',
+  'ai agent', 'ai assistant', 'intelligent', 'reasoning', 'inference',
+  'ml', 'tensorflow', 'pytorch', 'huggingface', 'transformers'
+];
+
+function TrendsPage() {
+  const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [topic, setTopic] = useState<string | null>(null);
+  const [showSharePopup, setShowSharePopup] = useState<number | null>(null);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [commentsOpen, setCommentsOpen] = useState<number | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const AUTO_REFRESH_INTERVAL = 300000;
+
+  function detectTopic(title: string, summary: string): string {
+    const text = (title + ' ' + summary).toLowerCase();
+    if (text.includes('claude') || text.includes('anthropic')) return 'LLMs';
+    if (text.includes('gpt') || text.includes('openai') || text.includes('chatgpt')) return 'LLMs';
+    if (text.includes('llm') || text.includes('large language')) return 'LLMs';
+    if (text.includes('n8n') || text.includes('zapier') || text.includes('automation')) return 'Workflow Automation';
+    if (text.includes('agent') || text.includes('autonomous')) return 'Workflow Automation';
+    if (text.includes('code') || text.includes('developer') || text.includes('github') || text.includes('copilot')) return 'Developer Tools';
+    if (text.includes('cursor') || text.includes('programming')) return 'Developer Tools';
+    if (text.includes('marketing') || text.includes('sales') || text.includes('crm')) return 'Marketing';
+    if (text.includes('security') || text.includes('privacy') || text.includes('cyber')) return 'Cybersecurity';
+    if (text.includes('education') || text.includes('learn') || text.includes('course')) return 'EdTech';
+    if (text.includes('finance') || text.includes('fintech') || text.includes('banking')) return 'FinTech';
+    if (text.includes('3d') || text.includes('xr') || text.includes('vr') || text.includes('ar')) return '3D & XR';
+    if (text.includes('translation') || text.includes('language')) return 'Translation';
+    if (text.includes('research') || text.includes('science')) return 'Market Intelligence';
+    if (text.includes('model') || text.includes('training') || text.includes('inference')) return 'LLMs';
+    return 'Industry Trends';
+  }
+
+  const fetchHackerNewsAI = useCallback(async (): Promise<FeedPost[]> => {
+    try {
+      console.log('🟢 Fetching Hacker News AI stories...');
+      const topStoriesUrl = 'https://hacker-news.firebaseio.com/v0/topstories.json';
+      const response = await fetch(topStoriesUrl);
+      const storyIds: number[] = await response.json();
+      
+      const top50Ids = storyIds.slice(0, 50);
+      
+      const storyPromises = top50Ids.map(async (id: number) => {
+        const storyUrl = `https://hacker-news.firebaseio.com/v0/item/${id}.json`;
+        const res = await fetch(storyUrl);
+        return res.json();
+      });
+      
+      const stories: HNStory[] = await Promise.all(storyPromises);
+      
+      const aiStories = stories.filter((story: HNStory) => {
+        if (!story || !story.title || story.type !== 'story') return false;
+        const title = story.title.toLowerCase();
+        return AI_KEYWORDS.some(keyword => title.includes(keyword));
+      });
+      
+      console.log(`🟢 Hacker News AI stories: ${aiStories.length}`);
+      
+      return aiStories.slice(0, 15).map((story: HNStory) => ({
+        id: story.id,
+        author: story.by || 'Hacker News',
+        role: 'Tech Community',
+        org: 'Hacker News',
+        time: story.time ? new Date(story.time * 1000).toLocaleDateString() : 'Just now',
+        body: story.title || 'No content available',
+        topic: detectTopic(story.title, ''),
+        reactions: story.score || Math.floor(Math.random() * 100) + 10,
+        comments: story.descendants || Math.floor(Math.random() * 20),
+        url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
+      }));
+    } catch (error) {
+      console.error('🔴 Hacker News AI fetch failed:', error);
+      return [];
+    }
+  }, []);
+
+  const fetchDevToAI = useCallback(async (): Promise<FeedPost[]> => {
+    try {
+      console.log('🟢 Fetching Dev.to AI articles...');
+      const url = 'https://dev.to/api/articles?tag=ai&per_page=20';
+      const response = await fetch(url);
+      const articles: DevToArticle[] = await response.json();
+      
+      console.log(`🟢 Dev.to AI articles: ${articles.length}`);
+      
+      return articles.map((article: DevToArticle) => ({
+        id: article.id + 2000,
+        author: article.user?.name || 'Dev.to',
+        role: 'Developer Community',
+        org: 'Dev.to',
+        time: article.published_at ? new Date(article.published_at).toLocaleDateString() : 'Just now',
+        body: article.title || 'No content available',
+        topic: detectTopic(article.title, article.description || ''),
+        reactions: article.positive_reactions_count || Math.floor(Math.random() * 80) + 10,
+        comments: article.comments_count || Math.floor(Math.random() * 20),
+        url: article.url || `https://dev.to/${article.user?.username}/${article.id}`,
+      }));
+    } catch (error) {
+      console.error('🔴 Dev.to fetch failed:', error);
+      return [];
+    }
+  }, []);
+
+  const getFallbackPosts = useCallback((): FeedPost[] => {
+    const fallbackItems = [
+      {
+        title: 'AI Startup Raises $100M Series C for Enterprise Automation',
+        description: 'The company plans to expand its AI-powered workflow automation platform globally.',
+        author: 'TechCrunch',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'New Open-Source LLM Matches GPT-4 Performance',
+        description: 'Researchers have developed an open-source language model that rivals commercial alternatives.',
+        author: 'Wired',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'Breakthrough in AI Reasoning Could Transform Enterprise Decision Making',
+        description: 'New research shows significant improvements in AI reasoning capabilities.',
+        author: 'MIT Technology Review',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'Top 10 AI Tools for Software Development in 2026',
+        description: 'A comprehensive review of the best AI-powered development tools.',
+        author: 'ZDNet',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'AI-Powered CRM Platform Disrupts Salesforce',
+        description: 'New AI-native CRM promises autonomous lead management and sales automation.',
+        author: 'VentureBeat',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'Claude 4 Released with Extended Context Window',
+        description: 'Anthropic ships Claude 4 with 1M token context and improved reasoning capabilities.',
+        author: 'AI Research Lab',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'n8n Launches AI Agent Builder for Enterprise Workflows',
+        description: 'New visual interface for building autonomous agents with drag-and-drop workflow automation.',
+        author: 'Workflow Automation Team',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      },
+      {
+        title: 'OpenAI Announces GPT-5 Enterprise with Enhanced Security',
+        description: 'New enterprise features for large-scale deployments with enhanced security and compliance.',
+        author: 'Tech Blog',
+        pubDate: new Date().toISOString(),
+        link: '#'
+      }
+    ];
+
+    return fallbackItems.slice(0, 15).map((item, index) => ({
+      id: index + 5000,
+      author: item.author || 'Tech News',
+      role: 'Industry Expert',
+      org: 'TechCrunch',
+      time: item.pubDate ? new Date(item.pubDate).toLocaleDateString() : 'Just now',
+      body: item.description || item.title || 'No content available',
+      topic: detectTopic(item.title, item.description || ''),
+      reactions: Math.floor(Math.random() * 100) + 10,
+      comments: Math.floor(Math.random() * 20),
+      url: item.link || '#',
+    }));
+  }, []);
+
+  const fetchTrends = useCallback(async () => {
+    if (isRefreshing) return;
+    
+    setIsRefreshing(true);
+    try {
+      console.log('🟢 Fetching AI-focused news...');
+      
+      const sources = [
+        fetchHackerNewsAI(),
+        fetchDevToAI()
+      ];
+      
+      const results = await Promise.allSettled(sources);
+      
+      let allPosts: FeedPost[] = [];
+      
+      for (const result of results) {
+        if (result.status === 'fulfilled' && result.value.length > 0) {
+          allPosts = allPosts.concat(result.value);
+        }
+      }
+      
+      const seenTitles = new Set<string>();
+      const uniquePosts = allPosts.filter((post) => {
+        const key = post.body.toLowerCase().trim();
+        if (seenTitles.has(key)) return false;
+        seenTitles.add(key);
+        return true;
+      });
+      
+      const sortedPosts = uniquePosts
+        .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+        .slice(0, 20);
+      
+      if (sortedPosts.length > 0) {
+        console.log(`✅ AI news loaded: ${sortedPosts.length} articles`);
+        setFeedPosts(sortedPosts);
+      } else {
+        console.warn('⚠️ No AI news found, using fallback');
+        setFeedPosts(getFallbackPosts());
+      }
+      
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('🔴 Failed to fetch AI news:', error);
+      setFeedPosts(getFallbackPosts());
+    } finally {
+      setIsRefreshing(false);
+      setLoading(false);
+    }
+  }, [isRefreshing, fetchHackerNewsAI, fetchDevToAI, getFallbackPosts]);
+
+  useEffect(() => {
+    fetchTrends();
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchTrends();
+    }, AUTO_REFRESH_INTERVAL);
+    
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const handleManualRefresh = () => {
+    if (!isRefreshing) {
+      fetchTrends();
+    }
+  };
+
+  const getTimeAgo = (date: Date): string => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins === 1) return '1 minute ago';
+    if (diffMins < 60) return `${diffMins} minutes ago`;
+    
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours === 1) return '1 hour ago';
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    
+    return date.toLocaleDateString();
+  };
+
+  const topics = useMemo(() => 
+    Array.from(new Set(feedPosts.map((p) => p.topic))), 
+    [feedPosts]
+  );
+  
+  const posts = topic ? feedPosts.filter((p) => p.topic === topic) : feedPosts;
+
+  const handleShare = (post: FeedPost) => {
+    setShowSharePopup(post.id);
+    setTimeout(() => setShowSharePopup(null), 3000);
+  };
+
+  const handleCopyLink = (post: FeedPost) => {
+    const url = post.url || window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedId(post.id);
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  };
+
+  const handleCommentToggle = (postId: number) => {
+    setCommentsOpen(commentsOpen === postId ? null : postId);
+  };
+
+  if (loading) {
+    return (
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-4">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> LOADING AI NEWS
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black">
+            <span className="text-fg-strong">AI Trends </span>
+            <span className="text-gradient">Hub</span>
+          </h1>
+          <div className="mt-8 space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="glass rounded-2xl p-5 animate-pulse">
+                <div className="flex items-start gap-3">
+                  <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                  </div>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-4">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> AI NEWS FEED
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-black">
+          <span className="text-fg-strong">AI Trends </span>
+          <span className="text-gradient">Hub</span>
+        </h1>
+        <p className="mt-3 text-fg-soft max-w-xl mx-auto">
+          Curated AI news from Hacker News and Dev.to communities.
+        </p>
+        <div className="mt-2 text-xs text-fg-mute flex items-center justify-center gap-3">
+          <span>{feedPosts.length > 0 ? `Showing ${feedPosts.length} AI trends` : 'No trends available'}</span>
+          <span className="w-px h-3 bg-fg-mute/30" />
+          <span>Updated {getTimeAgo(lastUpdated)}</span>
+          <button
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            className={`flex items-center gap-1 text-accent hover:underline transition-all ${
+              isRefreshing ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            <span className={`inline-block transition-transform ${isRefreshing ? 'animate-spin' : ''}`}>
+              <span className="text-sm">⟳</span>
+            </span>
+            {isRefreshing ? 'Refreshing...' : 'Refresh'}
+          </button>
+        </div>
+      </div>
+
+      <div className="glass-strong rounded-2xl p-3 mb-5 flex flex-wrap gap-1.5 sticky top-[72px] z-20">
+        <button
+          onClick={() => setTopic(null)}
+          className={`text-xs px-3 py-1.5 rounded-full border transition-all ${!topic ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"}`}
+        >
+          All Topics
+        </button>
+        {topics.map((t) => (
+          <button
+            key={t}
+            onClick={() => setTopic(topic === t ? null : t)}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-all ${topic === t ? "bg-primary text-primary-foreground border-primary" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"}`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+
+      <div className="space-y-4">
+        {posts.length > 0 ? (
+          posts.map((p) => (
+            <FeedCard 
+              key={p.id} 
+              post={p} 
+              onShare={() => handleShare(p)}
+              onCopyLink={() => handleCopyLink(p)}
+              onCommentToggle={() => handleCommentToggle(p.id)}
+              isCommentsOpen={commentsOpen === p.id}
+              showSharePopup={showSharePopup === p.id}
+              copiedId={copiedId === p.id}
+            />
+          ))
+        ) : (
+          <div className="glass rounded-2xl p-10 text-center">
+            <p className="text-fg-soft">No AI posts in this topic yet.</p>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
+
+/* ---------- Feed Card Component ---------- */
+function FeedCard({ 
+  post, 
+  onShare, 
+  onCopyLink, 
+  onCommentToggle,
+  isCommentsOpen,
+  showSharePopup,
+  copiedId,
+}: { 
+  post: FeedPost;
+  onShare: () => void;
+  onCopyLink: () => void;
+  onCommentToggle: () => void;
+  isCommentsOpen: boolean;
+  showSharePopup: boolean;
+  copiedId: boolean;
+}) {
+  const [liked, setLiked] = useState(false);
+  const [comments, setComments] = useState<string[]>([]);
+  const [newComment, setNewComment] = useState("");
+  
+  const init = post.author
+    .split(" ")
+    .slice(0, 2)
+    .map((s: string) => s[0])
+    .join("")
+    .toUpperCase();
+
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      setComments([...comments, newComment.trim()]);
+      setNewComment("");
+    }
+  };
+
+  return (
+    <article className="glass rounded-2xl p-5 hover:border-accent/30 transition-all relative">
+      <header className="flex items-start gap-3">
+        <div className="grid place-items-center h-12 w-12 rounded-full bg-gradient-to-br from-[#052b66] to-[#1a4ba0] text-white font-bold border-2 border-accent/30 shrink-0">
+          {init}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold text-fg-strong truncate">{post.author}</p>
+          <p className="text-xs text-fg-soft truncate">
+            {post.role} · {post.org}
+          </p>
+          <p className="text-[11px] text-fg-mute mt-0.5">{post.time} · 🌐</p>
+        </div>
+        <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-accent/15 text-accent border border-accent/30 shrink-0">
+          {post.topic}
+        </span>
+      </header>
+      
+      <p className="mt-4 text-fg-strong leading-relaxed whitespace-pre-line">{post.body}</p>
+      
+      {post.url && post.url !== '#' && (
+        <a 
+          href={post.url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-xs text-accent hover:underline block mt-2 flex items-center gap-1"
+        >
+          <ExternalLink className="h-3 w-3" /> Read full article
+        </a>
+      )}
+      
+      <div className="mt-4 flex items-center justify-between text-xs text-fg-mute pb-2 border-b border-[var(--surface-border)]">
+        <span className="flex items-center gap-1">
+          <span className="grid place-items-center h-4 w-4 rounded-full bg-accent text-accent-foreground">
+            <ThumbsUp className="h-2.5 w-2.5" />
+          </span>
+          {post.reactions + (liked ? 1 : 0)}
+        </span>
+        <span>{post.comments + comments.length} comments</span>
+      </div>
+      
+      <div className="mt-2 grid grid-cols-3 gap-1">
+        <button
+          onClick={() => setLiked((l) => !l)}
+          className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${liked ? "text-accent bg-accent/10" : "text-fg-soft hover:bg-[var(--surface-1)]"}`}
+        >
+          <ThumbsUp className="h-3.5 w-3.5" /> Like
+        </button>
+        <button
+          onClick={onCommentToggle}
+          className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all"
+        >
+          <MessageSquare className="h-3.5 w-3.5" /> Comment
+        </button>
+        <div className="relative">
+          <button
+            onClick={onShare}
+            className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all w-full"
+          >
+            <Share2 className="h-3.5 w-3.5" /> Share
+          </button>
+          {showSharePopup && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 glass-strong rounded-xl p-2 shadow-xl z-10 flex gap-1">
+              <button
+                onClick={onCopyLink}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--surface-1)] transition-all"
+              >
+                {copiedId ? <CheckIcon className="h-3.5 w-3.5 text-accent" /> : <Copy className="h-3.5 w-3.5" />}
+                {copiedId ? 'Copied!' : 'Copy Link'}
+              </button>
+              <button
+                onClick={() => {
+                  if (post.url && post.url !== '#') {
+                    window.open(post.url, '_blank');
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--surface-1)] transition-all"
+                disabled={!post.url || post.url === '#'}
+              >
+                <ExternalLink className="h-3.5 w-3.5" /> Open
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Comments Section */}
+      {isCommentsOpen && (
+        <div className="mt-4 pt-4 border-t border-[var(--surface-border)] space-y-3">
+          <div className="flex gap-2">
+            <input
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+              placeholder="Write a comment..."
+              className="flex-1 px-3 py-2 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent text-sm"
+            />
+            <button
+              onClick={handleAddComment}
+              className="px-4 py-2 rounded-xl bg-accent text-accent-foreground text-sm font-medium hover:brightness-110 transition-all"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          </div>
+          {comments.length > 0 && (
+            <div className="space-y-2">
+              {comments.map((comment, index) => (
+                <div key={index} className="bg-[var(--surface-1)] rounded-xl p-3 text-sm text-fg-soft">
+                  <span className="text-accent font-semibold">You: </span>
+                  {comment}
+                </div>
+              ))}
+            </div>
+          )}
+          {comments.length === 0 && (
+            <p className="text-xs text-fg-mute text-center">No comments yet. Be the first!</p>
+          )}
+        </div>
+      )}
+    </article>
   );
 }
 
@@ -1599,14 +2206,17 @@ function Header({
 
 /* ---------- MAIN APP ---------- */
 export function AIDiscoveryApp() {
-  // Default theme is now "image"
+  // ===== THEME =====
   const [theme, setTheme] = useState<"dark" | "light" | "image">("image");
   
   // Load saved theme after mount
   useEffect(() => {
     const saved = localStorage.getItem("aidc-theme") as "dark" | "light" | "image" | null;
-    if (saved) {
+    if (saved && ["dark", "light", "image"].includes(saved)) {
       setTheme(saved);
+    } else {
+      setTheme("image");
+      localStorage.setItem("aidc-theme", "image");
     }
   }, []);
   
@@ -1656,6 +2266,21 @@ export function AIDiscoveryApp() {
       );
     });
   }, [query, activeCat, activeTags, activeDept]);
+
+  // Ref for scrolling to first tool on search
+  const firstToolRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll to first matching tool when search is performed
+  useEffect(() => {
+    if (query.trim().length > 0 && filtered.length > 0 && firstToolRef.current) {
+      setTimeout(() => {
+        firstToolRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 100);
+    }
+  }, [query, filtered]);
 
   const counts = useMemo(() => {
     const m = new Map<Category, number>();
@@ -1817,7 +2442,7 @@ export function AIDiscoveryApp() {
               </div>
             </section>
 
-            {/* Department Filter - RESTORED */}
+            {/* Department Filter */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
               <div className="glass-strong rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-3">
@@ -1963,17 +2588,21 @@ export function AIDiscoveryApp() {
                   </div>
                   
                   <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {filtered.map((t) => (
-                      <ToolCard
+                    {filtered.map((t, index) => (
+                      <div
                         key={t.id}
-                        tool={t}
-                        inStack={stack.includes(t.id)}
-                        onAdd={() => addToStack(t.id)}
-                        onOpen={() => setOpenTool(t)}
-                        showCompare
-                        compareSelected={compare.includes(t.id)}
-                        onToggleCompare={() => toggleCompare(t.id)}
-                      />
+                        ref={index === 0 ? firstToolRef : null}
+                      >
+                        <ToolCard
+                          tool={t}
+                          inStack={stack.includes(t.id)}
+                          onAdd={() => addToStack(t.id)}
+                          onOpen={() => setOpenTool(t)}
+                          showCompare
+                          compareSelected={compare.includes(t.id)}
+                          onToggleCompare={() => toggleCompare(t.id)}
+                        />
+                      </div>
                     ))}
                   </div>
                 </section>
@@ -2046,615 +2675,5 @@ export function AIDiscoveryApp() {
         />
       </div>
     </div>
-  );
-}
-
-// ========== TRENDS PAGE ==========
-
-/* ---------- Types for Trends Page ---------- */
-interface FeedPost {
-  id: number;
-  author: string;
-  role: string;
-  org: string;
-  time: string;
-  body: string;
-  topic: string;
-  reactions: number;
-  comments: number;
-  url?: string;
-}
-
-// Interface for Hacker News API
-interface HNStory {
-  id: number;
-  title: string;
-  by: string;
-  time: number;
-  score: number;
-  descendants: number;
-  url?: string;
-  text?: string;
-  type: string;
-}
-
-// Interface for Dev.to API
-interface DevToArticle {
-  id: number;
-  title: string;
-  description?: string;
-  published_at: string;
-  positive_reactions_count: number;
-  comments_count: number;
-  user: {
-    name: string;
-    username: string;
-  };
-  tag_list: string[];
-  url?: string;
-}
-
-// AI-related keywords for filtering
-const AI_KEYWORDS = [
-  'ai', 'artificial intelligence', 'machine learning', 'deep learning',
-  'neural network', 'gpt', 'claude', 'llm', 'large language model',
-  'automation', 'robotics', 'openai', 'anthropic', 'gemini', 'bard',
-  'chatgpt', 'copilot', 'cursor', 'n8n', 'zapier', 'agent', 'autonomous',
-  'computer vision', 'nlp', 'natural language', 'speech recognition',
-  'generative ai', 'stable diffusion', 'midjourney', 'dall-e',
-  'ai agent', 'ai assistant', 'intelligent', 'reasoning', 'inference',
-  'ml', 'tensorflow', 'pytorch', 'huggingface', 'transformers'
-];
-
-/* ---------- Trends Page ---------- */
-function TrendsPage() {
-  const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [topic, setTopic] = useState<string | null>(null);
-  const [showSharePopup, setShowSharePopup] = useState<number | null>(null);
-  const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [commentsOpen, setCommentsOpen] = useState<number | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  const AUTO_REFRESH_INTERVAL = 300000;
-
-  function detectTopic(title: string, summary: string): string {
-    const text = (title + ' ' + summary).toLowerCase();
-    if (text.includes('claude') || text.includes('anthropic')) return 'LLMs';
-    if (text.includes('gpt') || text.includes('openai') || text.includes('chatgpt')) return 'LLMs';
-    if (text.includes('llm') || text.includes('large language')) return 'LLMs';
-    if (text.includes('n8n') || text.includes('zapier') || text.includes('automation')) return 'Workflow Automation';
-    if (text.includes('agent') || text.includes('autonomous')) return 'Workflow Automation';
-    if (text.includes('code') || text.includes('developer') || text.includes('github') || text.includes('copilot')) return 'Developer Tools';
-    if (text.includes('cursor') || text.includes('programming')) return 'Developer Tools';
-    if (text.includes('marketing') || text.includes('sales') || text.includes('crm')) return 'Marketing';
-    if (text.includes('security') || text.includes('privacy') || text.includes('cyber')) return 'Cybersecurity';
-    if (text.includes('education') || text.includes('learn') || text.includes('course')) return 'EdTech';
-    if (text.includes('finance') || text.includes('fintech') || text.includes('banking')) return 'FinTech';
-    if (text.includes('3d') || text.includes('xr') || text.includes('vr') || text.includes('ar')) return '3D & XR';
-    if (text.includes('translation') || text.includes('language')) return 'Translation';
-    if (text.includes('research') || text.includes('science')) return 'Market Intelligence';
-    if (text.includes('model') || text.includes('training') || text.includes('inference')) return 'LLMs';
-    return 'Industry Trends';
-  }
-
-  const fetchHackerNewsAI = useCallback(async (): Promise<FeedPost[]> => {
-    try {
-      console.log('🟢 Fetching Hacker News AI stories...');
-      const topStoriesUrl = 'https://hacker-news.firebaseio.com/v0/topstories.json';
-      const response = await fetch(topStoriesUrl);
-      const storyIds: number[] = await response.json();
-      
-      const top50Ids = storyIds.slice(0, 50);
-      
-      const storyPromises = top50Ids.map(async (id: number) => {
-        const storyUrl = `https://hacker-news.firebaseio.com/v0/item/${id}.json`;
-        const res = await fetch(storyUrl);
-        return res.json();
-      });
-      
-      const stories: HNStory[] = await Promise.all(storyPromises);
-      
-      const aiStories = stories.filter((story: HNStory) => {
-        if (!story || !story.title || story.type !== 'story') return false;
-        const title = story.title.toLowerCase();
-        return AI_KEYWORDS.some(keyword => title.includes(keyword));
-      });
-      
-      console.log(`🟢 Hacker News AI stories: ${aiStories.length}`);
-      
-      return aiStories.slice(0, 15).map((story: HNStory) => ({
-        id: story.id,
-        author: story.by || 'Hacker News',
-        role: 'Tech Community',
-        org: 'Hacker News',
-        time: story.time ? new Date(story.time * 1000).toLocaleDateString() : 'Just now',
-        body: story.title || 'No content available',
-        topic: detectTopic(story.title, ''),
-        reactions: story.score || Math.floor(Math.random() * 100) + 10,
-        comments: story.descendants || Math.floor(Math.random() * 20),
-        url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
-      }));
-    } catch (error) {
-      console.error('🔴 Hacker News AI fetch failed:', error);
-      return [];
-    }
-  }, []);
-
-  const fetchDevToAI = useCallback(async (): Promise<FeedPost[]> => {
-    try {
-      console.log('🟢 Fetching Dev.to AI articles...');
-      const url = 'https://dev.to/api/articles?tag=ai&per_page=20';
-      const response = await fetch(url);
-      const articles: DevToArticle[] = await response.json();
-      
-      console.log(`🟢 Dev.to AI articles: ${articles.length}`);
-      
-      return articles.map((article: DevToArticle) => ({
-        id: article.id + 2000,
-        author: article.user?.name || 'Dev.to',
-        role: 'Developer Community',
-        org: 'Dev.to',
-        time: article.published_at ? new Date(article.published_at).toLocaleDateString() : 'Just now',
-        body: article.title || 'No content available',
-        topic: detectTopic(article.title, article.description || ''),
-        reactions: article.positive_reactions_count || Math.floor(Math.random() * 80) + 10,
-        comments: article.comments_count || Math.floor(Math.random() * 20),
-        url: article.url || `https://dev.to/${article.user?.username}/${article.id}`,
-      }));
-    } catch (error) {
-      console.error('🔴 Dev.to fetch failed:', error);
-      return [];
-    }
-  }, []);
-
-  const getFallbackPosts = useCallback((): FeedPost[] => {
-    const fallbackItems = [
-      {
-        title: 'AI Startup Raises $100M Series C for Enterprise Automation',
-        description: 'The company plans to expand its AI-powered workflow automation platform globally.',
-        author: 'TechCrunch',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'New Open-Source LLM Matches GPT-4 Performance',
-        description: 'Researchers have developed an open-source language model that rivals commercial alternatives.',
-        author: 'Wired',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'Breakthrough in AI Reasoning Could Transform Enterprise Decision Making',
-        description: 'New research shows significant improvements in AI reasoning capabilities.',
-        author: 'MIT Technology Review',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'Top 10 AI Tools for Software Development in 2026',
-        description: 'A comprehensive review of the best AI-powered development tools.',
-        author: 'ZDNet',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'AI-Powered CRM Platform Disrupts Salesforce',
-        description: 'New AI-native CRM promises autonomous lead management and sales automation.',
-        author: 'VentureBeat',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'Claude 4 Released with Extended Context Window',
-        description: 'Anthropic ships Claude 4 with 1M token context and improved reasoning capabilities.',
-        author: 'AI Research Lab',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'n8n Launches AI Agent Builder for Enterprise Workflows',
-        description: 'New visual interface for building autonomous agents with drag-and-drop workflow automation.',
-        author: 'Workflow Automation Team',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      },
-      {
-        title: 'OpenAI Announces GPT-5 Enterprise with Enhanced Security',
-        description: 'New enterprise features for large-scale deployments with enhanced security and compliance.',
-        author: 'Tech Blog',
-        pubDate: new Date().toISOString(),
-        link: '#'
-      }
-    ];
-
-    return fallbackItems.slice(0, 15).map((item, index) => ({
-      id: index + 5000,
-      author: item.author || 'Tech News',
-      role: 'Industry Expert',
-      org: 'TechCrunch',
-      time: item.pubDate ? new Date(item.pubDate).toLocaleDateString() : 'Just now',
-      body: item.description || item.title || 'No content available',
-      topic: detectTopic(item.title, item.description || ''),
-      reactions: Math.floor(Math.random() * 100) + 10,
-      comments: Math.floor(Math.random() * 20),
-      url: item.link || '#',
-    }));
-  }, []);
-
-  const fetchTrends = useCallback(async () => {
-    if (isRefreshing) return;
-    
-    setIsRefreshing(true);
-    try {
-      console.log('🟢 Fetching AI-focused news...');
-      
-      const sources = [
-        fetchHackerNewsAI(),
-        fetchDevToAI()
-      ];
-      
-      const results = await Promise.allSettled(sources);
-      
-      let allPosts: FeedPost[] = [];
-      
-      for (const result of results) {
-        if (result.status === 'fulfilled' && result.value.length > 0) {
-          allPosts = allPosts.concat(result.value);
-        }
-      }
-      
-      const seenTitles = new Set<string>();
-      const uniquePosts = allPosts.filter((post) => {
-        const key = post.body.toLowerCase().trim();
-        if (seenTitles.has(key)) return false;
-        seenTitles.add(key);
-        return true;
-      });
-      
-      const sortedPosts = uniquePosts
-        .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-        .slice(0, 20);
-      
-      if (sortedPosts.length > 0) {
-        console.log(`✅ AI news loaded: ${sortedPosts.length} articles`);
-        setFeedPosts(sortedPosts);
-      } else {
-        console.warn('⚠️ No AI news found, using fallback');
-        setFeedPosts(getFallbackPosts());
-      }
-      
-      setLastUpdated(new Date());
-    } catch (error) {
-      console.error('🔴 Failed to fetch AI news:', error);
-      setFeedPosts(getFallbackPosts());
-    } finally {
-      setIsRefreshing(false);
-      setLoading(false);
-    }
-  }, [isRefreshing, fetchHackerNewsAI, fetchDevToAI, getFallbackPosts]);
-
-  useEffect(() => {
-    fetchTrends();
-  }, []);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchTrends();
-    }, AUTO_REFRESH_INTERVAL);
-    
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const handleManualRefresh = () => {
-    if (!isRefreshing) {
-      fetchTrends();
-    }
-  };
-
-  const getTimeAgo = (date: Date): string => {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    
-    if (diffMins < 1) return 'Just now';
-    if (diffMins === 1) return '1 minute ago';
-    if (diffMins < 60) return `${diffMins} minutes ago`;
-    
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours === 1) return '1 hour ago';
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    
-    return date.toLocaleDateString();
-  };
-
-  const topics = useMemo(() => 
-    Array.from(new Set(feedPosts.map((p) => p.topic))), 
-    [feedPosts]
-  );
-  
-  const posts = topic ? feedPosts.filter((p) => p.topic === topic) : feedPosts;
-
-  const handleShare = (post: FeedPost) => {
-    setShowSharePopup(post.id);
-    setTimeout(() => setShowSharePopup(null), 3000);
-  };
-
-  const handleCopyLink = (post: FeedPost) => {
-    const url = post.url || window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopiedId(post.id);
-      setTimeout(() => setCopiedId(null), 2000);
-    });
-  };
-
-  const handleCommentToggle = (postId: number) => {
-    setCommentsOpen(commentsOpen === postId ? null : postId);
-  };
-
-  if (loading) {
-    return (
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-4">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> LOADING AI NEWS
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-black">
-            <span className="text-fg-strong">AI Trends </span>
-            <span className="text-gradient">Hub</span>
-          </h1>
-          <div className="mt-8 space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="glass rounded-2xl p-5 animate-pulse">
-                <div className="flex items-start gap-3">
-                  <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                  </div>
-                </div>
-                <div className="mt-4 space-y-2">
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  return (
-    <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-[11px] font-medium text-fg-soft mb-4">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> AI NEWS FEED
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-black">
-          <span className="text-fg-strong">AI Trends </span>
-          <span className="text-gradient">Hub</span>
-        </h1>
-        <p className="mt-3 text-fg-soft max-w-xl mx-auto">
-          Curated AI news from Hacker News and Dev.to communities.
-        </p>
-        <div className="mt-2 text-xs text-fg-mute flex items-center justify-center gap-3">
-          <span>{feedPosts.length > 0 ? `Showing ${feedPosts.length} AI trends` : 'No trends available'}</span>
-          <span className="w-px h-3 bg-fg-mute/30" />
-          <span>Updated {getTimeAgo(lastUpdated)}</span>
-          <button
-            onClick={handleManualRefresh}
-            disabled={isRefreshing}
-            className={`flex items-center gap-1 text-accent hover:underline transition-all ${
-              isRefreshing ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            <span className={`inline-block transition-transform ${isRefreshing ? 'animate-spin' : ''}`}>
-              <span className="text-sm">⟳</span>
-            </span>
-            {isRefreshing ? 'Refreshing...' : 'Refresh'}
-          </button>
-        </div>
-      </div>
-
-      <div className="glass-strong rounded-2xl p-3 mb-5 flex flex-wrap gap-1.5 sticky top-[72px] z-20">
-        <button
-          onClick={() => setTopic(null)}
-          className={`text-xs px-3 py-1.5 rounded-full border transition-all ${!topic ? "bg-accent text-accent-foreground border-accent" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-accent"}`}
-        >
-          All Topics
-        </button>
-        {topics.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTopic(topic === t ? null : t)}
-            className={`text-xs px-3 py-1.5 rounded-full border transition-all ${topic === t ? "bg-primary text-primary-foreground border-primary" : "bg-[var(--surface-1)] border-[var(--surface-border)] text-fg-soft hover:border-primary"}`}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-4">
-        {posts.length > 0 ? (
-          posts.map((p) => (
-            <FeedCard 
-              key={p.id} 
-              post={p} 
-              onShare={() => handleShare(p)}
-              onCopyLink={() => handleCopyLink(p)}
-              onCommentToggle={() => handleCommentToggle(p.id)}
-              isCommentsOpen={commentsOpen === p.id}
-              showSharePopup={showSharePopup === p.id}
-              copiedId={copiedId === p.id}
-            />
-          ))
-        ) : (
-          <div className="glass rounded-2xl p-10 text-center">
-            <p className="text-fg-soft">No AI posts in this topic yet.</p>
-          </div>
-        )}
-      </div>
-    </main>
-  );
-}
-
-/* ---------- Feed Card Component ---------- */
-function FeedCard({ 
-  post, 
-  onShare, 
-  onCopyLink, 
-  onCommentToggle,
-  isCommentsOpen,
-  showSharePopup,
-  copiedId,
-}: { 
-  post: FeedPost;
-  onShare: () => void;
-  onCopyLink: () => void;
-  onCommentToggle: () => void;
-  isCommentsOpen: boolean;
-  showSharePopup: boolean;
-  copiedId: boolean;
-}) {
-  const [liked, setLiked] = useState(false);
-  const [comments, setComments] = useState<string[]>([]);
-  const [newComment, setNewComment] = useState("");
-  
-  const init = post.author
-    .split(" ")
-    .slice(0, 2)
-    .map((s: string) => s[0])
-    .join("")
-    .toUpperCase();
-
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      setComments([...comments, newComment.trim()]);
-      setNewComment("");
-    }
-  };
-
-  return (
-    <article className="glass rounded-2xl p-5 hover:border-accent/30 transition-all relative">
-      <header className="flex items-start gap-3">
-        <div className="grid place-items-center h-12 w-12 rounded-full bg-gradient-to-br from-[#052b66] to-[#1a4ba0] text-white font-bold border-2 border-accent/30 shrink-0">
-          {init}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold text-fg-strong truncate">{post.author}</p>
-          <p className="text-xs text-fg-soft truncate">
-            {post.role} · {post.org}
-          </p>
-          <p className="text-[11px] text-fg-mute mt-0.5">{post.time} · 🌐</p>
-        </div>
-        <span className="text-[10px] font-semibold px-2 py-1 rounded-full bg-accent/15 text-accent border border-accent/30 shrink-0">
-          {post.topic}
-        </span>
-      </header>
-      
-      <p className="mt-4 text-fg-strong leading-relaxed whitespace-pre-line">{post.body}</p>
-      
-      {post.url && post.url !== '#' && (
-        <a 
-          href={post.url} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-xs text-accent hover:underline block mt-2 flex items-center gap-1"
-        >
-          <ExternalLink className="h-3 w-3" /> Read full article
-        </a>
-      )}
-      
-      <div className="mt-4 flex items-center justify-between text-xs text-fg-mute pb-2 border-b border-[var(--surface-border)]">
-        <span className="flex items-center gap-1">
-          <span className="grid place-items-center h-4 w-4 rounded-full bg-accent text-accent-foreground">
-            <ThumbsUp className="h-2.5 w-2.5" />
-          </span>
-          {post.reactions + (liked ? 1 : 0)}
-        </span>
-        <span>{post.comments + comments.length} comments</span>
-      </div>
-      
-      <div className="mt-2 grid grid-cols-3 gap-1">
-        <button
-          onClick={() => setLiked((l) => !l)}
-          className={`flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-all ${liked ? "text-accent bg-accent/10" : "text-fg-soft hover:bg-[var(--surface-1)]"}`}
-        >
-          <ThumbsUp className="h-3.5 w-3.5" /> Like
-        </button>
-        <button
-          onClick={onCommentToggle}
-          className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all"
-        >
-          <MessageSquare className="h-3.5 w-3.5" /> Comment
-        </button>
-        <div className="relative">
-          <button
-            onClick={onShare}
-            className="flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium text-fg-soft hover:bg-[var(--surface-1)] transition-all w-full"
-          >
-            <Share2 className="h-3.5 w-3.5" /> Share
-          </button>
-          {showSharePopup && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 glass-strong rounded-xl p-2 shadow-xl z-10 flex gap-1">
-              <button
-                onClick={onCopyLink}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--surface-1)] transition-all"
-              >
-                {copiedId ? <CheckIcon className="h-3.5 w-3.5 text-accent" /> : <Copy className="h-3.5 w-3.5" />}
-                {copiedId ? 'Copied!' : 'Copy Link'}
-              </button>
-              <button
-                onClick={() => {
-                  if (post.url && post.url !== '#') {
-                    window.open(post.url, '_blank');
-                  }
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[var(--surface-1)] transition-all"
-                disabled={!post.url || post.url === '#'}
-              >
-                <ExternalLink className="h-3.5 w-3.5" /> Open
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Comments Section */}
-      {isCommentsOpen && (
-        <div className="mt-4 pt-4 border-t border-[var(--surface-border)] space-y-3">
-          <div className="flex gap-2">
-            <input
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
-              placeholder="Write a comment..."
-              className="flex-1 px-3 py-2 rounded-xl bg-[var(--surface-1)] border border-[var(--surface-border)] text-fg-strong placeholder:text-fg-mute outline-none focus:border-accent text-sm"
-            />
-            <button
-              onClick={handleAddComment}
-              className="px-4 py-2 rounded-xl bg-accent text-accent-foreground text-sm font-medium hover:brightness-110 transition-all"
-            >
-              <Send className="h-4 w-4" />
-            </button>
-          </div>
-          {comments.length > 0 && (
-            <div className="space-y-2">
-              {comments.map((comment, index) => (
-                <div key={index} className="bg-[var(--surface-1)] rounded-xl p-3 text-sm text-fg-soft">
-                  <span className="text-accent font-semibold">You: </span>
-                  {comment}
-                </div>
-              ))}
-            </div>
-          )}
-          {comments.length === 0 && (
-            <p className="text-xs text-fg-mute text-center">No comments yet. Be the first!</p>
-          )}
-        </div>
-      )}
-    </article>
   );
 }
