@@ -17,7 +17,7 @@ export default defineConfig({
     ],
     server: {
       host: true,        // Expose to network (allows access from other devices)
-      port: 7090,        // Change this to your preferred port (e.g., 5173, 8080, 3000)
+      port: 7080,        // Change this to your preferred port (e.g., 5173, 8080, 3000)
       strictPort: false, // If port is taken, try next available port
     },
   },

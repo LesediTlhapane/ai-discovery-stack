@@ -5658,7 +5658,7 @@ export const FEED_POSTS: FeedPost[] = [
     comments: 187,
   },
   {
-    id: 12,
+    id: 112,
     author: "Sara Lindgren",
     role: "Localization Strategist",
     org: "DeepL",
@@ -5702,3 +5702,7 @@ export const FEED_POSTS: FeedPost[] = [
     comments: 56,
   },
 ];
+// Add at the bottom of your tools-data.ts file
+const allIds = TOOLS.map(t => t.id);
+const duplicates = allIds.filter((id, index) => allIds.indexOf(id) !== index);
+console.log('🔍 Duplicate IDs found:', duplicates.length > 0 ? duplicates : 'None ✅');

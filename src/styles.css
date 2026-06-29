@@ -295,3 +295,99 @@
   scrollbar-width: thin;
   scrollbar-color: oklch(0.78 0.21 142 / 0.25) transparent;
 }
+
+/* =============================================
+   IMAGE BACKGROUND THEME - FIXED
+   ============================================= */
+
+/* When image-bg class is on html, change the body background */
+html.image-bg body {
+  background: rgba(10, 14, 26, 0.6) !important;
+  position: relative !important;
+  background-image: url('/world.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-blend-mode: overlay !important;
+}
+
+/* Add the image as a pseudo-element on body (alternative approach) */
+html.image-bg body::before {
+  content: '' !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: -1 !important;
+  background-image: url('/world.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  opacity: 0.2 !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Dark overlay for better readability */
+html.image-bg body::after {
+  content: '' !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: -1 !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  pointer-events: none !important;
+}
+
+/* Make glass cards more opaque for readability */
+html.image-bg .glass {
+  background: rgba(10, 14, 26, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.image-bg .glass-strong {
+  background: rgba(10, 14, 26, 0.92) !important;
+  backdrop-filter: blur(20px) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Fix text colors */
+html.image-bg .text-fg-strong { color: #f0f4f8 !important; }
+html.image-bg .text-fg-soft { color: #d1d9e6 !important; }
+html.image-bg .text-fg-mute { color: #9aa9b9 !important; }
+html.image-bg .text-white { color: #ffffff !important; }
+
+/* Fix inputs */
+html.image-bg input,
+html.image-bg textarea,
+html.image-bg select {
+  background: rgba(0, 0, 0, 0.4) !important;
+  color: #f0f4f8 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.image-bg input::placeholder,
+html.image-bg textarea::placeholder {
+  color: #9aa9b9 !important;
+}
+
+html.image-bg input:focus,
+html.image-bg textarea:focus {
+  border-color: #45cc42 !important;
+  box-shadow: 0 0 0 3px rgba(69, 204, 66, 0.2) !important;
+}
+
+/* Hide earth effect */
+html.image-bg .earth-scroll-planet {
+  opacity: 0.02 !important;
+}
+
+/* =============================================
+   END IMAGE BACKGROUND THEME
+   ============================================= */
