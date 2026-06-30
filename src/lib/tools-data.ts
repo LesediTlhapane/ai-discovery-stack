@@ -3225,10 +3225,10 @@ const RAW: Raw[] = [
     rating: 4.3,
     founded: "2021",
     headquarters: "San Francisco, CA",
-    website: "https://tome.app",
-    documentation: "https://tome.app/docs",
-    community: "https://tome.app/community",
-    support: "https://tome.app/support",
+    website: "https://tomeapp.ai/",
+    documentation: "https://tomeapp.ai/docs",
+    community: "https://tomeapp.ai/blog",
+    support: "https://tomeapp.ai/support",
   },
   // ---- Tool 61: Mentimeter ----
   {
@@ -3986,7 +3986,7 @@ const NEW_TOOLS: Raw[] = [
     summary: "Developer-focused search engine with real-time web and documentation access.",
     benefits: "Provides contextual, developer-specific answers with verified sources.",
     bestFor: "Development research, debugging, and learning new technologies.",
-    url: "https://phindai.org/",
+    url: "https://phindai.org/phind-chat/",
     tags: ["Free-Tier"],
     domain: "phind.com",
     features: [
@@ -4022,10 +4022,10 @@ const NEW_TOOLS: Raw[] = [
     rating: 4.4,
     founded: "2022",
     headquarters: "San Francisco, CA",
-    website: "https://phind.com",
-    documentation: "https://phind.com/docs",
-    community: "https://phind.com/community",
-    support: "https://phind.com/support",
+    website: "https://phindai.org/phind-chat/",
+    documentation: "https://phindai.org/terms-of-service/",
+    community: "https://phindai.org/blog/",
+    support: "https://phindai.org/contact-us/",
   },
   {
     id: 77,

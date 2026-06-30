@@ -887,7 +887,7 @@ function Chatbot({ onOpenTool }: { onOpenTool: (t: Tool) => void }) {
         <div className="fixed bottom-24 right-5 z-40 w-[calc(100vw-2.5rem)] sm:w-96 h-[70vh] sm:h-[560px] glass-strong rounded-3xl flex flex-col overflow-hidden animate-fade-in-up shadow-2xl">
           <div className="flex items-center gap-3 p-4 border-b border-[var(--surface-border)] bg-gradient-to-r from-primary/30 to-transparent">
             <img
-              src="/estudy.jpeg"
+              src="/logo.png"
               alt="eSTUDY Logo"
               className="h-10 w-10 rounded-xl object-cover"
             />
@@ -2206,7 +2206,7 @@ function Header({
 
 /* ---------- MAIN APP ---------- */
 export function AIDiscoveryApp() {
-  // ===== THEME =====
+  // Default theme is "image"
   const [theme, setTheme] = useState<"dark" | "light" | "image">("image");
   
   // Load saved theme after mount
@@ -2214,9 +2214,6 @@ export function AIDiscoveryApp() {
     const saved = localStorage.getItem("aidc-theme") as "dark" | "light" | "image" | null;
     if (saved && ["dark", "light", "image"].includes(saved)) {
       setTheme(saved);
-    } else {
-      setTheme("image");
-      localStorage.setItem("aidc-theme", "image");
     }
   }, []);
   
